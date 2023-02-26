@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Terminal</title>
+    <title>Tx0actical&#39;s Blog</title>
     <link>https://Tx0actical.github.io/</link>
-    <description>Recent content on Terminal</description>
+    <description>Recent content on Tx0actical&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Feb 2023 13:53:19 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Feb 2023 18:48:34 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writing Windows Kernel-Mode Drivers for Fun and Profit</title>
+      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</link>
+      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
     <item>
       <title>Welcome</title>
       <link>https://Tx0actical.github.io/posts/welcome/</link>
