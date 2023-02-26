@@ -24,11 +24,11 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          personal_token: ${{ secrets.TOKEN }}
+          personal_token: ${{ secrets.B_TOKEN }}
           external_repository: Tx0actical.github.io
           publish_dir: ./public
           #   keep_files: true
           user_name: <username>
           user_email: <username@email.com>
-          publish_branch: master
+          publish_branch: main
         #   cname: example.com
