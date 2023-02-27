@@ -72,7 +72,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;p&gt;Regardless of details, the bottom-line is, WDM is complex and much harder to work with while WDF is easier to understand, tradeoff being the abstraction.&lt;/p&gt;
 &lt;h3 id=&#34;requirements&#34;&gt;Requirements&lt;/h3&gt;
 &lt;p&gt;There are some tools and methodologies that are recommended while working with drivers.&lt;/p&gt;
-&lt;p&gt;To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing).&lt;/p&gt;
+&lt;p&gt;To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing). You can find them &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;To test drivers, you&amp;rsquo;ll need a Windows VM, with Windows SDK and WDK installed.&lt;/p&gt;
 &lt;p&gt;SysInternals Tools is a must.&lt;/p&gt;
 &lt;h3 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h3&gt;
