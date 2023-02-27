@@ -104,7 +104,7 @@
       <span class="post-author">Tx0actical</span>
     
     
-      <span class="post-reading-time">:: 4 min read (645 words)</span>
+      <span class="post-reading-time">:: 4 min read (668 words)</span>
     
   </div>
 
@@ -139,7 +139,7 @@
 </blockquote>
 <p>By the way, <code>DriverEntry</code> is just the <code>main</code> of the driver.</p>
 <h3 id="drivers-who-dis">Drivers&hellip; Who dis?<a href="#drivers-who-dis" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Drivers are Structured, High Privilege loadable Kernel modules operating in Ring 0 processor privilege level, same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.</p>
+<p>Drivers are Structured, High Privilege loadable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.</p>
 <p>Drivers provide a way to interact with (in most cases) hardware devices. These are called Hardware Drivers. On the contrary, software components that execute kernel-level privilege tasks such as file creation, are classified under Software Drivers.</p>
 <p>To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&gt; Windows Driver Model (WDM) and Windows Driver Foundation (WDF).</p>
 <h3 id="wdm-vs-wdf">WDM vs WDF<a href="#wdm-vs-wdf" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
@@ -159,11 +159,15 @@
 <p>Regardless of details, the bottom-line is, WDM is complex and much harder to work with while WDF is easier to understand, tradeoff being the abstraction.</p>
 <h3 id="requirements">Requirements<a href="#requirements" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>There are some tools and methodologies that are recommended while working with drivers.</p>
-<p>To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing). You can find them <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">here</a> and Visual Studio <a href="https://visualstudio.microsoft.com/downloads/">here</a></p>
+<p>To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing). You can find them <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">here</a> and Visual Studio <a href="https://visualstudio.microsoft.com/downloads/">here</a>.</p>
+<blockquote>
+<p>Additionally, you&rsquo;d require a Visual Studio extension, &ldquo;Windows Driver Kit&rdquo;. That should be automatically installed if WDK is configured correctly.</p>
+</blockquote>
 <p>To test drivers, you&rsquo;ll need a <a href="https://www.microsoft.com/software-download/windows11">Windows</a> Virtual Machine, with Windows SDK and WDK installed.</p>
 <p><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite">SysInternals Tools</a> are a must.</p>
 <h3 id="final-thoughts">Final Thoughts<a href="#final-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Driver Development is not something you do regularly, unless you have to. The purpose is to understand Windows internals and drivers in order to build anything from Anti-Virus Filter Driver to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.</p>
+<p>Driver Development is not something you do regularly, unless you have to.</p>
+<p>The purpose is to understand Windows internals and drivers in order to build anything from Anti-Virus Filter Driver to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.</p>
 <p>In Part 2, you&rsquo;ll learn Windows Internals required to getting started with drivers.</p>
 <p>Stay Tuned.</p>
 <p>Tx0actical. Out.</p>
