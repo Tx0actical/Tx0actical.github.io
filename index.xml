@@ -7,18 +7,35 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023 Tx0actical</copyright>
-    <lastBuildDate>Sun, 26 Feb 2023 18:48:34 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Feb 2023 13:53:19 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>System Idle Process(0)</title>
+      <link>https://Tx0actical.github.io/posts/welcome/</link>
+      <pubDate>Sun, 26 Feb 2023 13:53:19 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/posts/welcome/</guid>
+      <description>Welcome.
+In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
+Stay Tuned.
+Tx0actical. Out.</description>
+      <content>&lt;p&gt;Welcome.&lt;/p&gt;
+&lt;p&gt;In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;Stay Tuned.&lt;/p&gt;
+&lt;p&gt;Tx0actical. Out.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>0x00 Introduction and Fundamentals</title>
       <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</link>
-      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</guid>
       <description>Hello.
 This is the first part in the series, &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
 This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&amp;rsquo; system/VM if you messed up.
 A basic DriverEntry routine definition looks something like this -&amp;gt;
-NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) { UNREFERENCED_PARAMETER (DriverObject); UNREFERNECED_PARAMETER (RegistryPath); return SUCCESS; } While this may look intimidating at first, brushing up your OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.</description>
+NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) { UNREFERENCED_PARAMETER (DriverObject); UNREFERNECED_PARAMETER (RegistryPath); return SUCCESS; } While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;This is the first part in the series, &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&amp;rsquo; system/VM if you messed up.&lt;/p&gt;
@@ -28,7 +45,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    UNREFERNECED_PARAMETER (RegistryPath);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SUCCESS;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this may look intimidating at first, brushing up your OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;For further details I recommend &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt; by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt; by Pavel Yosifovich&lt;/p&gt;
@@ -42,11 +59,11 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Simply put, WDM is older, more-complex-to-work-with framework to write drivers. Ideal for writing File Systems or File System Filter drivers, WDM provides greater control over kernel objects and is hard to write, debug, and maintain.&lt;/p&gt;
-&lt;p&gt;WDM objects are system-wide objects that are accessible to drivers and are referenced by pointers. A driver that corrupts a WDM Objects corrupts the entire system. WDM drivers are trusted kernel components, hence OS does less checks to validate data.&lt;/p&gt;
+&lt;p&gt;WDM objects are system-wide objects accessible to drivers and are referenced by pointers. A driver that corrupts a WDM object corrupts the entire system. WDM drivers are trusted kernel components, hence OS does less checks to validate data.&lt;/p&gt;
 &lt;p&gt;From a security perspective, leveraging a framework that provides higher control than WDF, would enable more stealth during offensive engagements.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;WDF is a new, easier-to-work-with framework that abstracts a lot details of WDM. It supports a coherent object model in which objects are invisible to drivers&lt;/p&gt;
+&lt;p&gt;WDF is a new, easier-to-work-with framework that abstracts a lot details of WDM. It supports a coherent object model in which objects are invisible to drivers.&lt;/p&gt;
 &lt;p&gt;Corrupting a WDF Driver is not only more difficult - as the framework evalutates data being supplied - but also causes system wide problems less often.&lt;/p&gt;
 &lt;p&gt;Apart from these, there many more subtle differences such as how they handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes where in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM and then invoke driver&amp;rsquo;s event callback functions.&lt;/p&gt;
 &lt;p&gt;Event callback functions do a more specific task than general I/O dispatch routines of WDM.&lt;/p&gt;
@@ -61,23 +78,6 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;h3 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h3&gt;
 &lt;p&gt;Driver Development is not something you do regularly, unless you have to. The purpose is to understand drivers in order to build anything from Anti-Virus Software to Exploits/Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
 &lt;p&gt;In Part 2, you&amp;rsquo;ll learn Windows Internals required to getting started with drivers.&lt;/p&gt;
-&lt;p&gt;Stay Tuned.&lt;/p&gt;
-&lt;p&gt;Tx0actical. Out.&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>System Idle Process(0)</title>
-      <link>https://Tx0actical.github.io/posts/welcome/</link>
-      <pubDate>Sun, 26 Feb 2023 13:53:19 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/posts/welcome/</guid>
-      <description>Welcome.
-In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
-Stay Tuned.
-Tx0actical. Out.</description>
-      <content>&lt;p&gt;Welcome.&lt;/p&gt;
-&lt;p&gt;In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 </content>
