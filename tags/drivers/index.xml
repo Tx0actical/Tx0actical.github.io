@@ -58,7 +58,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;p&gt;To test drivers, you&amp;rsquo;ll need a Windows VM, with Windows SDK and WDK installed.&lt;/p&gt;
 &lt;p&gt;SysInternals Tools is a must.&lt;/p&gt;
 &lt;h3 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h3&gt;
-&lt;p&gt;Driver Development is not something you do regularly, unless you have to. The purpose is to understand drivers in order to build anything from Anti-Virus Software to Exploits/Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
+&lt;p&gt;Driver Development is not something you do regularly, unless you have to. The purpose is to understand Windows internals and drivers in order to build anything from Anti-Virus Filter Driver to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
 &lt;p&gt;In Part 2, you&amp;rsquo;ll learn Windows Internals required to getting started with drivers.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
