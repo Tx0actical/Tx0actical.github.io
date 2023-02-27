@@ -104,7 +104,7 @@
       <span class="post-author">Tx0actical</span>
     
     
-      <span class="post-reading-time">:: 3 min read (637 words)</span>
+      <span class="post-reading-time">:: 3 min read (631 words)</span>
     
   </div>
 
@@ -152,16 +152,16 @@
 <li>
 <p>WDF is a new, easier-to-work-with framework that abstracts a lot details of WDM. It supports a coherent object model in which objects are invisible to drivers.</p>
 <p>Corrupting a WDF Driver is not only more difficult - as the framework evalutates data being supplied - but also causes system wide problems less often.</p>
-<p>Apart from these, there many more subtle differences such as how they handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes where in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM and then invoke driver&rsquo;s event callback functions.</p>
+<p>Apart from these, there many more subtle differences such as how both handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes where in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM and then invoke driver&rsquo;s event callback functions.</p>
 <p>Event callback functions do a more specific task than general I/O dispatch routines of WDM.</p>
 </li>
 </ul>
 <p>Regardless of details, the bottom-line is, WDM is complex and much harder to work with while WDF is easier to understand, tradeoff being the abstraction.</p>
 <h3 id="requirements">Requirements<a href="#requirements" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>There are some tools and methodologies that are recommended while working with Drivers.</p>
+<p>There are some tools and methodologies that are recommended while working with drivers.</p>
 <p>To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing).</p>
 <p>To test drivers, you&rsquo;ll need a Windows VM, with Windows SDK and WDK installed.</p>
-<p>To know about Windows and experiment, SysInternals Tools is a no-brainer.</p>
+<p>SysInternals Tools is a must.</p>
 <h3 id="final-thoughts">Final Thoughts<a href="#final-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Driver Development is not something you do regularly, unless you have to. The purpose is to understand drivers in order to build anything from Anti-Virus Software to Exploits/Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.</p>
 <p>In Part 2, you&rsquo;ll learn Windows Internals required to getting started with drivers.</p>
