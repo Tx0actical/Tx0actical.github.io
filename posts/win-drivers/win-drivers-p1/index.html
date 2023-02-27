@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   
-    <title>Writing Windows Kernel-Mode Drivers for Fun and Profit :: Tx0actical&#39;s Blog</title>
+    <title>0x00 Introduction and Fundamentals :: Tx0actical&#39;s Blog</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Blog series dedicated to write KMDF Drivers" />
+<meta name="description" content="Writing Windows KMDF Drivers for Fun and Profit - Part 1" />
 <meta name="keywords" content=", " />
 <meta name="robots" content="noodp" />
 
@@ -36,12 +36,17 @@
 
 <meta name="twitter:card" content="summary" />
 
+  
+    <meta name="twitter:site" content="https://twitter.com/Tx0actical" />
+  
+    <meta name="twitter:creator" content="Tx0actical" />
+
 
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Writing Windows Kernel-Mode Drivers for Fun and Profit">
-<meta property="og:description" content="Blog series dedicated to write KMDF Drivers" />
+<meta property="og:title" content="0x00 Introduction and Fundamentals">
+<meta property="og:description" content="Writing Windows KMDF Drivers for Fun and Profit - Part 1" />
 <meta property="og:url" content="https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/" />
 <meta property="og:site_name" content="Tx0actical&#39;s Blog" />
 
@@ -93,7 +98,7 @@
     
 <article class="post">
   <h1 class="post-title">
-    <a href="https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/">Writing Windows Kernel-Mode Drivers for Fun and Profit</a>
+    <a href="https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/">0x00 Introduction and Fundamentals</a>
   </h1>
   <div class="post-meta">
     
@@ -103,15 +108,19 @@
       </time>
     
     
+      <span class="post-author">Tx0actical</span>
+    
+    
+      <span class="post-reading-time">:: 4 min read (640 words)</span>
     
   </div>
 
   
     <span class="post-tags">
       
-      #<a href="https://Tx0actical.github.io/tags/"></a>&nbsp;
+      #<a href="https://Tx0actical.github.io/tags/windows/">Windows</a>&nbsp;
       
-      #<a href="https://Tx0actical.github.io/tags/"></a>&nbsp;
+      #<a href="https://Tx0actical.github.io/tags/drivers/">Drivers</a>&nbsp;
       
     </span>
   
@@ -120,7 +129,53 @@
 
   
 
-  <div class="post-content"></div>
+  <div class="post-content"><div>
+        <p>Hello.</p>
+<p>This is the first part in the series, &ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&rdquo;.</p>
+<p>This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&rsquo; system/VM if you messed up.</p>
+<p>A basic <code>DriverEntry</code> routine definition looks something like this -&gt;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span>NTSTATUS <span style="color:#a6e22e">DriverEntry</span> (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
+</span></span><span style="display:flex;"><span>    UNREFERENCED_PARAMETER (DriverObject);
+</span></span><span style="display:flex;"><span>    UNREFERNECED_PARAMETER (RegistryPath);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>While this may look intimidating at first, brushing up your OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&rsquo;s about to come.</p>
+<p>We&rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.</p>
+<blockquote>
+<p>For further details I recommend <a href="https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188">Windows Internals</a> by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and <a href="https://leanpub.com/windowskernelprogrammingsecondedition">Windows Kernel Programming</a> by Pavel Yosifovich</p>
+</blockquote>
+<p>By the way, <code>DriverEntry</code> is just the <code>main</code> of the driver.</p>
+<h3 id="drivers-who-dis">Drivers&hellip; Who dis?<a href="#drivers-who-dis" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Drivers are Structured, High Privilege loadable Kernel modules operating in Ring 0 processor privilege level, same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.</p>
+<p>Drivers provide a way to interact with (in most cases) hardware devices. These are called Hardware Drivers. On the contrary, software components that execute kernel-level privilege tasks such as file creation, are classified under Software Drivers.</p>
+<p>To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&gt; Windows Driver Model (WDM) and Windows Driver Foundation (WDF).</p>
+<h3 id="wdm-vs-wdf">WDM vs WDF<a href="#wdm-vs-wdf" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>
+<p>Simply put, WDM is older, more-complex-to-work-with framework to write drivers. Ideal for writing File Systems or File System Filter drivers, WDM provides greater control over kernel objects and is hard to write, debug, and maintain.</p>
+<p>WDM objects are system-wide objects that are accessible to drivers and are referenced by pointers. A driver that corrupts a WDM Objects corrupts the entire system. WDM drivers are trusted kernel components, hence OS does less checks to validate data.</p>
+<p>From a security perspective, leveraging a framework that provides higher control than WDF, would enable more stealth during offensive engagements.</p>
+</li>
+<li>
+<p>WDF is a new, easier-to-work-with framework that abstracts a lot details of WDM. It supports a coherent object model in which objects are invisible to drivers</p>
+<p>Corrupting a WDF Driver is not only more difficult - as the framework evalutates data being supplied - but also causes system wide problems less often.</p>
+<p>Apart from these, there many more subtle differences such as how they handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes where in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM and then invoke driver&rsquo;s event callback functions.</p>
+<p>Event callback functions do a more specific task than general I/O dispatch routines of WDM.</p>
+</li>
+</ul>
+<p>Regardless of details, the bottom-line is, WDM is complex and much harder to work with while WDF is easier to understand, tradeoff being the abstraction.</p>
+<h3 id="requirements">Requirements<a href="#requirements" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>There are some tools and methodologies that are recommended while working with Drivers.</p>
+<p>To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing).</p>
+<p>To test drivers, you&rsquo;ll need a Windows VM, with Windows SDK and WDK installed.</p>
+<p>To know about Windows and experiment, SysInternals Tools is a no-brainer.</p>
+<h3 id="final-thoughts">Final Thoughts<a href="#final-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Driver Development is not something you do regularly, unless you have to. The purpose is to understand drivers in order to build anything from Anti-Virus Software to Exploits/Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.</p>
+<p>In Part 2, you&rsquo;ll learn Windows Internals required to getting started with drivers.</p>
+<p>Stay Tuned.</p>
+<p>Tx0actical. Out.</p>
+
+      </div></div>
 
   
 
@@ -136,8 +191,8 @@
     <footer class="footer">
   <div class="footer__inner">
     
-      <div class="copyright">
-        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+      <div class="copyright copyright--user">
+        <span>© 2023 Tx0actical</span>
     
       <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
       </div>

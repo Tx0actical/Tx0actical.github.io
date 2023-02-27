@@ -2,17 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</loc>
+    <lastmod>2023-02-26T18:48:34+05:30</lastmod>
+  </url><url>
+    <loc>https://Tx0actical.github.io/tags/drivers/</loc>
+    <lastmod>2023-02-26T18:48:34+05:30</lastmod>
+  </url><url>
     <loc>https://Tx0actical.github.io/posts/</loc>
-    <lastmod>2023-02-26T13:53:19+05:30</lastmod>
+    <lastmod>2023-02-26T18:48:34+05:30</lastmod>
+  </url><url>
+    <loc>https://Tx0actical.github.io/tags/</loc>
+    <lastmod>2023-02-26T18:48:34+05:30</lastmod>
+  </url><url>
+    <loc>https://Tx0actical.github.io/</loc>
+    <lastmod>2023-02-26T18:48:34+05:30</lastmod>
+  </url><url>
+    <loc>https://Tx0actical.github.io/tags/windows/</loc>
+    <lastmod>2023-02-26T18:48:34+05:30</lastmod>
   </url><url>
     <loc>https://Tx0actical.github.io/posts/welcome/</loc>
     <lastmod>2023-02-26T13:53:19+05:30</lastmod>
   </url><url>
-    <loc>https://Tx0actical.github.io/</loc>
-    <lastmod>2023-02-26T13:53:19+05:30</lastmod>
-  </url><url>
     <loc>https://Tx0actical.github.io/categories/</loc>
-  </url><url>
-    <loc>https://Tx0actical.github.io/tags/</loc>
   </url>
 </urlset>
