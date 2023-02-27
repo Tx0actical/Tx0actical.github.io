@@ -6,11 +6,12 @@
     <description>Recent content in Drivers on Tx0actical&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© 2023 Tx0actical</copyright><atom:link href="https://Tx0actical.github.io/tags/drivers/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>© 2023 Tx0actical</copyright>
+    <lastBuildDate>Sun, 26 Feb 2023 18:48:34 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/drivers/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>0x00 Introduction and Fundamentals</title>
       <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</guid>
       <description>Hello.
@@ -34,7 +35,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;/blockquote&gt;
 &lt;p&gt;By the way, &lt;code&gt;DriverEntry&lt;/code&gt; is just the &lt;code&gt;main&lt;/code&gt; of the driver.&lt;/p&gt;
 &lt;h3 id=&#34;drivers-who-dis&#34;&gt;Drivers&amp;hellip; Who dis?&lt;/h3&gt;
-&lt;p&gt;Drivers are Structured, High Privilege loadable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.&lt;/p&gt;
+&lt;p&gt;Drivers are Structured, High Privilege Deployable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.&lt;/p&gt;
 &lt;p&gt;Drivers provide a way to interact with (in most cases) hardware devices. These are called Hardware Drivers. On the contrary, software components that execute kernel-level privilege tasks such as file creation, are classified under Software Drivers.&lt;/p&gt;
 &lt;p&gt;To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&amp;gt; Windows Driver Model (WDM) and Windows Driver Foundation (WDF).&lt;/p&gt;
 &lt;h3 id=&#34;wdm-vs-wdf&#34;&gt;WDM vs WDF&lt;/h3&gt;
@@ -63,7 +64,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;h3 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h3&gt;
 &lt;p&gt;Driver Development is not something you do regularly, unless you have to.&lt;/p&gt;
 &lt;p&gt;The purpose is to understand Windows internals and drivers in order to build anything from Anti-Virus Filter Driver to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
-&lt;p&gt;In Part 2, you&amp;rsquo;ll learn Advanced Windows Internals required to getting started with drivers.&lt;/p&gt;
+&lt;p&gt;In Part 2, you&amp;rsquo;ll learn Advanced Windows Internals required to get started with drivers.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 </content>
