@@ -37,7 +37,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;h3 id=&#34;drivers-who-dis&#34;&gt;Drivers&amp;hellip; Who dis?&lt;/h3&gt;
 &lt;p&gt;Drivers are Structured, High Privilege Deployable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.&lt;/p&gt;
 &lt;p&gt;Drivers provide a way to interact with (in most cases) hardware devices. These are called Hardware Drivers. On the contrary, software components that execute kernel-level privilege tasks such as file creation, are classified under Software Drivers.&lt;/p&gt;
-&lt;p&gt;To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&amp;gt; Windows Driver Model (WDM) and Windows Driver Frameworks (WDF).&lt;/p&gt;
+&lt;p&gt;To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&amp;gt; Windows Driver Model (WDM) and Windows Driver Foundation (WDF).&lt;/p&gt;
 &lt;h3 id=&#34;wdm-vs-wdf&#34;&gt;WDM vs WDF&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
