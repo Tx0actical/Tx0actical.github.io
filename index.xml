@@ -56,6 +56,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;h3 id=&#34;requirements&#34;&gt;Requirements&lt;/h3&gt;
 &lt;p&gt;There are some tools and methodologies that are recommended while working with drivers.&lt;/p&gt;
 &lt;p&gt;To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing). You can find them &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk&#34;&gt;here&lt;/a&gt; and Visual Studio &lt;a href=&#34;https://visualstudio.microsoft.com/downloads/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Make sure SDK and WDK versions match, this is important.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Additionally, you&amp;rsquo;d require a Visual Studio extension, &amp;ldquo;Windows Driver Kit&amp;rdquo;. That should be automatically installed if WDK is configured correctly.&lt;/p&gt;
 &lt;/blockquote&gt;
