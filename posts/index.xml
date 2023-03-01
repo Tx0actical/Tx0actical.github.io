@@ -31,7 +31,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;For further details I recommend &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt; by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt; by Pavel Yosifovich&lt;/p&gt;
+&lt;p&gt;For further details I recommend &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt; by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt; by Pavel Yosifovich.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;By the way, &lt;code&gt;DriverEntry&lt;/code&gt; is just the &lt;code&gt;main&lt;/code&gt; of the driver.&lt;/p&gt;
 &lt;h3 id=&#34;drivers-who-dis&#34;&gt;Drivers&amp;hellip; Who dis?&lt;/h3&gt;
