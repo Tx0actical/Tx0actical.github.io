@@ -18,7 +18,7 @@
 This is the first part in the series, &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
 This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&amp;rsquo; system/VM if you messed up.
 A basic DriverEntry routine definition looks something like this -&amp;gt;
-NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) { UNREFERENCED_PARAMETER (DriverObject); UNREFERNECED_PARAMETER (RegistryPath); return SUCCESS; } While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.</description>
+NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) { UNREFERENCED_PARAMETER (DriverObject); UNREFERNECED_PARAMETER (RegistryPath); return STATUS_SUCCESS; } While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;This is the first part in the series, &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&amp;rsquo; system/VM if you messed up.&lt;/p&gt;
@@ -26,7 +26,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-C++&#34; data-lang=&#34;C++&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NTSTATUS &lt;span style=&#34;color:#a6e22e&#34;&gt;DriverEntry&lt;/span&gt; (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    UNREFERENCED_PARAMETER (DriverObject);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    UNREFERNECED_PARAMETER (RegistryPath);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SUCCESS;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; STATUS_SUCCESS;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.&lt;/p&gt;

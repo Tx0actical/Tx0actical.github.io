@@ -137,7 +137,7 @@
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span>NTSTATUS <span style="color:#a6e22e">DriverEntry</span> (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
 </span></span><span style="display:flex;"><span>    UNREFERENCED_PARAMETER (DriverObject);
 </span></span><span style="display:flex;"><span>    UNREFERNECED_PARAMETER (RegistryPath);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> SUCCESS;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> STATUS_SUCCESS;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&rsquo;s about to come.</p>
 <p>We&rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.</p>
