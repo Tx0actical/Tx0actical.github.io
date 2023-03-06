@@ -7,7 +7,100 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023 Tx0actical</copyright>
-    <lastBuildDate>Sun, 26 Feb 2023 18:48:34 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Feb 2023 15:54:12 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>0x02 Advanced Windows Internals</title>
+      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</link>
+      <pubDate>Mon, 27 Feb 2023 15:54:12 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
+      <description>Hello.
+KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.
+In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to Processes, Threads, Virtual Memory, System Services, Objects and Handles.
+This post draws inspiration from Windows Internals, if you wish to dive even deeper (The book, for instance, explains Session Manager, smss.exe in 38 points!), Windows Kernel Programming, the official Microsoft documentation and learnings from my own experiments.</description>
+      <content>&lt;p&gt;Hello.&lt;/p&gt;
+&lt;p&gt;KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.&lt;/p&gt;
+&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to Processes, Threads, Virtual Memory, System Services, Objects and Handles.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This post draws inspiration from &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt;, if you wish to dive even deeper (The book, for instance, explains Session Manager, &lt;code&gt;smss.exe&lt;/code&gt; in 38 points!), &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt;, the official &lt;a href=&#34;https://learn.microsoft.com/en-us/windows/&#34;&gt;Microsoft documentation&lt;/a&gt; and learnings from my own experiments.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;processes&#34;&gt;Processes&lt;/h3&gt;
+&lt;p&gt;A process is a management and containment object which represents an instance of a program. Contrary to popular belief, processes don&amp;rsquo;t run, they &amp;ldquo;manage&amp;rdquo;. Each Windows process is defined by an executive process structure or &lt;code&gt;EPROCESS&lt;/code&gt;. This structure is (to be exact, &lt;code&gt;_EPROCESS&lt;/code&gt;) is the kernel&amp;rsquo;s representation of a process object. It exists only in kernel memory, user-mode can access indirectly through handles.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;EPROCESS&lt;/code&gt; and its constituent data structures are contained in the System address space, with the exception of Process Control Block (PCB) which exists in User space.&lt;/p&gt;
+&lt;p&gt;Moreover, the subsystem service &lt;code&gt;csrss.exe&lt;/code&gt; maintains a parallel data structure &lt;code&gt;CSR_PROCESS&lt;/code&gt;. Additionally, the kernel mode part of the subsystem &lt;code&gt;Win32k.sys&lt;/code&gt; maintains a per-process data structure, &lt;code&gt;W32PROCESS&lt;/code&gt;. Except for the &lt;code&gt;idle&lt;/code&gt; process every process has a process object associated with it.&lt;/p&gt;
+&lt;p&gt;Many other drivers and system components, by registering process-creation notification, can choose to create their own data structure to store information on a per-process basis. The executive functions &lt;code&gt;PsSetCreateProcessNotifyRoutine&lt;/code&gt;(&lt;code&gt;Ex&lt;/code&gt;/&lt;code&gt;Ex2&lt;/code&gt;) allow this and are documented in WDK.&lt;/p&gt;
+&lt;p&gt;You can see the contents of &lt;code&gt;EPROCESS&lt;/code&gt; structure in &lt;code&gt;kd&lt;/code&gt; (Kernel Debugger).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This post introduces the Kernel Debugger. It is a useful tool to interact with Windows components. To get started, you&amp;rsquo;ll need to&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Enable debugging. To do that, in an elevated command prompt, type &lt;code&gt;bcdedit -debug on&lt;/code&gt; and restart.&lt;/li&gt;
+&lt;li&gt;If secure boot is enabled, might need to do additional changes in boot menu (You can avoid the hassle of tinkering with BIOS options. Instead, use a VM. Follow above-mentioned steps, and you&amp;rsquo;ll be good to go).&lt;/li&gt;
+&lt;li&gt;Install &amp;ldquo;WinDbg Preview&amp;rdquo; from Microsoft Store.&lt;/li&gt;
+&lt;li&gt;After it&amp;rsquo;s installed, go to Home -&amp;gt; Attach to Kernel -&amp;gt; Select &amp;lsquo;Local&amp;rsquo;. This will start a Local Kernel Debugging Session.&lt;/li&gt;
+&lt;li&gt;Once there, you can type all the commands in &lt;code&gt;lkd&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;dt nt!_EPROCESS&lt;/code&gt; lists all fields of &lt;code&gt;EPROCESS&lt;/code&gt; structure and their offsets in hexadecimal. Here&amp;rsquo;s what it looks like -&amp;gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_EPROCESS
+   +0x000 Pcb              : _KPROCESS
+   +0x438 ProcessLock      : _EX_PUSH_LOCK
+   +0x440 UniqueProcessId  : Ptr64 Void
+   ...
+   +0x520 SectionBaseAddress : Ptr64 Void
+   +0x528 Cookie           : Uint4B
+   +0x530 WorkingSetWatch  : Ptr64 _PAGEFAULT_HISTORY
+   ...
+   +0xb8c MinimalTerminate : Pos 1, 1 Bit
+   +0xb90 SyscallUsage     : Uint4B
+   +0xb90 SyscallUsageValues : &amp;lt;unnamed-tag&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;dt&lt;/code&gt; also shows specific contents of one or multiple fields by typing their names following structure name. Like so -&amp;gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_eprocess ProcessLock
+   +0x438 ProcessLock : _EX_PUSH_LOCK
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the output above, the command examines &lt;code&gt;ProcessLock&lt;/code&gt; field. You can also use the &lt;code&gt;-r&lt;/code&gt; flag to recursively examine all structures within &lt;code&gt;EPROCESS&lt;/code&gt;, a number after &lt;code&gt;-r&lt;/code&gt; determines depth of recursion.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;********************************
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I encourage you to experiment with &lt;code&gt;kd&lt;/code&gt; to become familiar with the syntax and enhance your Windows-Fu! &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/getting-started-with-windbg--kernel-mode-&#34;&gt;Here&lt;/a&gt; is the resource you might need.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A process can be created using several WinAPI functions -&amp;gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;CreateProcess&lt;/code&gt; -&amp;gt; Most basic functions which attempts to create a process with same access token as the creating process. If a different token is required, &lt;code&gt;CreateProcessAsUser&lt;/code&gt; can be used.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;CreateProcessWithTokenW&lt;/code&gt; -&amp;gt; Part of the &lt;code&gt;advapi32.dll&lt;/code&gt;, it is similar to &lt;code&gt;CreateProcessAsUser&lt;/code&gt; the difference being the privileges required for the caller.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;CreateProcessWithLogonW&lt;/code&gt; -&amp;gt; A handy shortcut to logon with a given user&amp;rsquo;s credentials.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;All of the above have different use cases but eventually, they all call &lt;code&gt;NtCreateUserProcess&lt;/code&gt; which makes the transition to kernel mode and continue the kernel mode part of process creation with the same name. As the name suggests, &lt;code&gt;NtCreateUserProcess&lt;/code&gt; creates a user process. A user cannot create a native process, such as smss.exe and csrss.exe, as &lt;code&gt;CreateProcessInternal&lt;/code&gt; function will reject images with native subsystem image type.&lt;/p&gt;
+&lt;p&gt;These functions require several parameters ********************************&lt;/p&gt;
+&lt;p&gt;The Kernel Executive supports additional processes, apart from NT Processes,**** that are created bypassing Win API, such as Native processes, Minimal or Pico Processes. ********************************&lt;/p&gt;
+&lt;h3 id=&#34;threads&#34;&gt;Threads&lt;/h3&gt;
+&lt;p&gt;A thread is a subcomponent of process which does the actual execution. A process contain threads (at a minimum, 1 thread). Threads have their address space separate from each other and share a common address space of the process. At OS-level, a Windows thread is represented by an executive thread object. This object encapsulates the &lt;code&gt;ETHREAD&lt;/code&gt; structure which contains, among other, &lt;code&gt;KTHREAD&lt;/code&gt; structure as its first member. &lt;code&gt;KTHREAD&lt;/code&gt; points to several other structures all of which reside in system address space, with the exception of Thread Environment Block (TEB). TEB, like PEB, reside in userspace. The Windows subsystem process (csrss) maintains a parallel data strucure &lt;code&gt;CSR_THREAD&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The simplest function to create a thread is &lt;code&gt;CreateThread&lt;/code&gt; function which creates a thread in the current process. On successful completion, a non-zero handle is returned and a unique thread ID if requested by the caller. ********************************&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CreateRemoteThread&lt;/code&gt; is used to ********************************&lt;/p&gt;
+&lt;p&gt;Going back to &lt;code&gt;kd&lt;/code&gt;, you can use it to examine &lt;code&gt;ETHREAD&lt;/code&gt; ********************************&lt;/p&gt;
+&lt;h3 id=&#34;virtual-memory&#34;&gt;Virtual Memory&lt;/h3&gt;
+&lt;p&gt;It is what is written on the box, a memory that doesn&amp;rsquo;t really exists. When a processor writes to a memory location it actually writes to a virtual address. The essence of virtual memory lies in the fact that, from an execution perspective the CPU doesn&amp;rsquo;t need to know whether the memory is mapped to RAM or Disk.&lt;/p&gt;
+&lt;p&gt;If the requested page doesn&amp;rsquo;t exist in RAM, the CPU raises a page fault exception, which causes the memory manager&amp;rsquo;s page fault exception handler to fetch data from file (if it&amp;rsquo;s a valid page fault), cpoy it to RAM, update the page table entries and instruct the CPU to try again.&lt;/p&gt;
+&lt;p&gt;Windows also supports large pages, by using Page Directory Entry (PDE) to directly map a large page without using a page table. This makes better use of Translation Lookaside Buffer (TLB) - a cache of recently translated pages maintained by the CPU.&lt;/p&gt;
+&lt;h3 id=&#34;mode-of-execution&#34;&gt;Mode of Execution&lt;/h3&gt;
+&lt;p&gt;This refers to the nature of code being executed. Does that belongs to a user application or is it a part of the kernel executive? The nature of code determines the privilege assigned to it.&lt;/p&gt;
+&lt;p&gt;When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&amp;rsquo;t affect other processes, they keep running.&lt;/p&gt;
+&lt;p&gt;A kernel mode component, such as a Kernel-Mode driver, shares its address space with the whole kernel. This implies if a component crashes it takes the whole system with it. The kernel, Hardware Abstraction Layer (HAL), and kernel drivers operate in kernel space.&lt;/p&gt;
+&lt;h3 id=&#34;system-services&#34;&gt;System Services&lt;/h3&gt;
+&lt;p&gt;Or System Calls are used to request kernel services like reading from file, thread creation etc. System calls in Windows follows a rather complex path as compared to Unix syscalls. Take file creation for example.&lt;/p&gt;
+&lt;p&gt;To quote the &amp;ldquo;System Services (a.k.a. System Calls)&amp;rdquo; section from &amp;ldquo;Windows Kernel Programming&amp;rdquo; of &amp;ldquo;Chapter 1: Windows Internals Overview&amp;rdquo; -&amp;gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;CreateFile&lt;/code&gt; is documented as implemented in &lt;code&gt;kernel32.dll&lt;/code&gt; &amp;hellip; This function still runs in user mode, so there is no way it can directly open a file. After some error checking, it calls &lt;code&gt;NtCreateFile&lt;/code&gt;, a function implemented in &lt;code&gt;NTDLL.dll&lt;/code&gt; &amp;hellip; This function (documented in the Windows Driver Kit for device driver developers) is the one that makes the transition to kernel mode. Before the actual transition, it puts a number, called system service number, into a CPU register (&lt;code&gt;EAX&lt;/code&gt; on Intel/AMD architectures). Then it issues a special CPU instruction (&lt;code&gt;syscallon&lt;/code&gt; x64 or &lt;code&gt;sysenter&lt;/code&gt; on x86) that makes the actual transition to kernel mode while jumping to a predefined routine called the system service dispatcher. The system service dispatcher, in turn, uses the value in that &lt;code&gt;EAX&lt;/code&gt; register as an index into a &lt;em&gt;System Service Dispatch Table&lt;/em&gt; (SSDT). Using this table, the code jumps to the system service (system call) itself. For our Notepad example, the SSDT entry would point to the &lt;code&gt;NtCreateFile&lt;/code&gt; function, implemented by the kernel’s I/O manager.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;objects-and-handles&#34;&gt;Objects and Handles&lt;/h3&gt;
+&lt;p&gt;In Windows, a kernel object is a single, runtime instance of a statically defined object.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>0x01 Introduction and Fundamentals</title>
       <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</link>

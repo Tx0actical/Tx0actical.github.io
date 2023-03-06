@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>0x02 Advanced Windows Internals :: Tx0actical&#39;s Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Writing Windows KMDF Drivers for Fun and Profit - Part 2" />
+<meta name="keywords" content=", " />
+<meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://Tx0actical.github.io/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://Tx0actical.github.io/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="https://Tx0actical.github.io/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://twitter.com/Tx0actical" />
+  
+    <meta name="twitter:creator" content="Tx0actical" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="0x02 Advanced Windows Internals">
+<meta property="og:description" content="Writing Windows KMDF Drivers for Fun and Profit - Part 2" />
+<meta property="og:url" content="https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/" />
+<meta property="og:site_name" content="Tx0actical&#39;s Blog" />
+
+  
+  
+  <meta property="og:image" content="https://Tx0actical.github.io/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-02-27 15:54:12 &#43;0530 IST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Tx0actical
+  </div>
+</a>
+
+    </div>
+    
+    
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/">0x02 Advanced Windows Internals</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2023-02-27 ::
+        
+      </time>
+    
+    
+      <span class="post-author">Tx0actical</span>
+    
+    
+      <span class="post-reading-time">:: 7 min read (1380 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://Tx0actical.github.io/tags/windows/">Windows</a>&nbsp;
+      
+      #<a href="https://Tx0actical.github.io/tags/internals/">Internals</a>&nbsp;
+      
+      #<a href="https://Tx0actical.github.io/tags/advanced/">Advanced</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>Hello.</p>
+<p>KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.</p>
+<p>In this iteration, Part 2, of &ldquo;Writing Windows KMDF Drivers for Fun and Profit&rdquo;, I&rsquo;ll introduce you to Processes, Threads, Virtual Memory, System Services, Objects and Handles.</p>
+<blockquote>
+<p>This post draws inspiration from <a href="https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188">Windows Internals</a>, if you wish to dive even deeper (The book, for instance, explains Session Manager, <code>smss.exe</code> in 38 points!), <a href="https://leanpub.com/windowskernelprogrammingsecondedition">Windows Kernel Programming</a>, the official <a href="https://learn.microsoft.com/en-us/windows/">Microsoft documentation</a> and learnings from my own experiments.</p>
+</blockquote>
+<h3 id="processes">Processes<a href="#processes" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>A process is a management and containment object which represents an instance of a program. Contrary to popular belief, processes don&rsquo;t run, they &ldquo;manage&rdquo;. Each Windows process is defined by an executive process structure or <code>EPROCESS</code>. This structure is (to be exact, <code>_EPROCESS</code>) is the kernel&rsquo;s representation of a process object. It exists only in kernel memory, user-mode can access indirectly through handles.</p>
+<p><code>EPROCESS</code> and its constituent data structures are contained in the System address space, with the exception of Process Control Block (PCB) which exists in User space.</p>
+<p>Moreover, the subsystem service <code>csrss.exe</code> maintains a parallel data structure <code>CSR_PROCESS</code>. Additionally, the kernel mode part of the subsystem <code>Win32k.sys</code> maintains a per-process data structure, <code>W32PROCESS</code>. Except for the <code>idle</code> process every process has a process object associated with it.</p>
+<p>Many other drivers and system components, by registering process-creation notification, can choose to create their own data structure to store information on a per-process basis. The executive functions <code>PsSetCreateProcessNotifyRoutine</code>(<code>Ex</code>/<code>Ex2</code>) allow this and are documented in WDK.</p>
+<p>You can see the contents of <code>EPROCESS</code> structure in <code>kd</code> (Kernel Debugger).</p>
+<blockquote>
+<p>This post introduces the Kernel Debugger. It is a useful tool to interact with Windows components. To get started, you&rsquo;ll need to</p>
+<ol>
+<li>Enable debugging. To do that, in an elevated command prompt, type <code>bcdedit -debug on</code> and restart.</li>
+<li>If secure boot is enabled, might need to do additional changes in boot menu (You can avoid the hassle of tinkering with BIOS options. Instead, use a VM. Follow above-mentioned steps, and you&rsquo;ll be good to go).</li>
+<li>Install &ldquo;WinDbg Preview&rdquo; from Microsoft Store.</li>
+<li>After it&rsquo;s installed, go to Home -&gt; Attach to Kernel -&gt; Select &lsquo;Local&rsquo;. This will start a Local Kernel Debugging Session.</li>
+<li>Once there, you can type all the commands in <code>lkd</code>.</li>
+</ol>
+</blockquote>
+<p><code>dt nt!_EPROCESS</code> lists all fields of <code>EPROCESS</code> structure and their offsets in hexadecimal. Here&rsquo;s what it looks like -&gt;</p>
+<pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">lkd&gt; dt nt!_EPROCESS
+   +0x000 Pcb              : _KPROCESS
+   +0x438 ProcessLock      : _EX_PUSH_LOCK
+   +0x440 UniqueProcessId  : Ptr64 Void
+   ...
+   +0x520 SectionBaseAddress : Ptr64 Void
+   +0x528 Cookie           : Uint4B
+   +0x530 WorkingSetWatch  : Ptr64 _PAGEFAULT_HISTORY
+   ...
+   +0xb8c MinimalTerminate : Pos 1, 1 Bit
+   +0xb90 SyscallUsage     : Uint4B
+   +0xb90 SyscallUsageValues : &lt;unnamed-tag&gt;
+</code></pre><p><code>dt</code> also shows specific contents of one or multiple fields by typing their names following structure name. Like so -&gt;</p>
+<pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">lkd&gt; dt nt!_eprocess ProcessLock
+   +0x438 ProcessLock : _EX_PUSH_LOCK
+</code></pre><p>In the output above, the command examines <code>ProcessLock</code> field. You can also use the <code>-r</code> flag to recursively examine all structures within <code>EPROCESS</code>, a number after <code>-r</code> determines depth of recursion.</p>
+<pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">********************************
+</code></pre><hr>
+<blockquote>
+<p>I encourage you to experiment with <code>kd</code> to become familiar with the syntax and enhance your Windows-Fu! <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/getting-started-with-windbg--kernel-mode-">Here</a> is the resource you might need.</p>
+</blockquote>
+<p>A process can be created using several WinAPI functions -&gt;</p>
+<ol>
+<li>
+<p><code>CreateProcess</code> -&gt; Most basic functions which attempts to create a process with same access token as the creating process. If a different token is required, <code>CreateProcessAsUser</code> can be used.</p>
+</li>
+<li>
+<p><code>CreateProcessWithTokenW</code> -&gt; Part of the <code>advapi32.dll</code>, it is similar to <code>CreateProcessAsUser</code> the difference being the privileges required for the caller.</p>
+</li>
+<li>
+<p><code>CreateProcessWithLogonW</code> -&gt; A handy shortcut to logon with a given user&rsquo;s credentials.</p>
+</li>
+</ol>
+<p>All of the above have different use cases but eventually, they all call <code>NtCreateUserProcess</code> which makes the transition to kernel mode and continue the kernel mode part of process creation with the same name. As the name suggests, <code>NtCreateUserProcess</code> creates a user process. A user cannot create a native process, such as smss.exe and csrss.exe, as <code>CreateProcessInternal</code> function will reject images with native subsystem image type.</p>
+<p>These functions require several parameters ********************************</p>
+<p>The Kernel Executive supports additional processes, apart from NT Processes,**** that are created bypassing Win API, such as Native processes, Minimal or Pico Processes. ********************************</p>
+<h3 id="threads">Threads<a href="#threads" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>A thread is a subcomponent of process which does the actual execution. A process contain threads (at a minimum, 1 thread). Threads have their address space separate from each other and share a common address space of the process. At OS-level, a Windows thread is represented by an executive thread object. This object encapsulates the <code>ETHREAD</code> structure which contains, among other, <code>KTHREAD</code> structure as its first member. <code>KTHREAD</code> points to several other structures all of which reside in system address space, with the exception of Thread Environment Block (TEB). TEB, like PEB, reside in userspace. The Windows subsystem process (csrss) maintains a parallel data strucure <code>CSR_THREAD</code></p>
+<p>The simplest function to create a thread is <code>CreateThread</code> function which creates a thread in the current process. On successful completion, a non-zero handle is returned and a unique thread ID if requested by the caller. ********************************</p>
+<p><code>CreateRemoteThread</code> is used to ********************************</p>
+<p>Going back to <code>kd</code>, you can use it to examine <code>ETHREAD</code> ********************************</p>
+<h3 id="virtual-memory">Virtual Memory<a href="#virtual-memory" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>It is what is written on the box, a memory that doesn&rsquo;t really exists. When a processor writes to a memory location it actually writes to a virtual address. The essence of virtual memory lies in the fact that, from an execution perspective the CPU doesn&rsquo;t need to know whether the memory is mapped to RAM or Disk.</p>
+<p>If the requested page doesn&rsquo;t exist in RAM, the CPU raises a page fault exception, which causes the memory manager&rsquo;s page fault exception handler to fetch data from file (if it&rsquo;s a valid page fault), cpoy it to RAM, update the page table entries and instruct the CPU to try again.</p>
+<p>Windows also supports large pages, by using Page Directory Entry (PDE) to directly map a large page without using a page table. This makes better use of Translation Lookaside Buffer (TLB) - a cache of recently translated pages maintained by the CPU.</p>
+<h3 id="mode-of-execution">Mode of Execution<a href="#mode-of-execution" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>This refers to the nature of code being executed. Does that belongs to a user application or is it a part of the kernel executive? The nature of code determines the privilege assigned to it.</p>
+<p>When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&rsquo;t affect other processes, they keep running.</p>
+<p>A kernel mode component, such as a Kernel-Mode driver, shares its address space with the whole kernel. This implies if a component crashes it takes the whole system with it. The kernel, Hardware Abstraction Layer (HAL), and kernel drivers operate in kernel space.</p>
+<h3 id="system-services">System Services<a href="#system-services" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Or System Calls are used to request kernel services like reading from file, thread creation etc. System calls in Windows follows a rather complex path as compared to Unix syscalls. Take file creation for example.</p>
+<p>To quote the &ldquo;System Services (a.k.a. System Calls)&rdquo; section from &ldquo;Windows Kernel Programming&rdquo; of &ldquo;Chapter 1: Windows Internals Overview&rdquo; -&gt;</p>
+<blockquote>
+<p><code>CreateFile</code> is documented as implemented in <code>kernel32.dll</code> &hellip; This function still runs in user mode, so there is no way it can directly open a file. After some error checking, it calls <code>NtCreateFile</code>, a function implemented in <code>NTDLL.dll</code> &hellip; This function (documented in the Windows Driver Kit for device driver developers) is the one that makes the transition to kernel mode. Before the actual transition, it puts a number, called system service number, into a CPU register (<code>EAX</code> on Intel/AMD architectures). Then it issues a special CPU instruction (<code>syscallon</code> x64 or <code>sysenter</code> on x86) that makes the actual transition to kernel mode while jumping to a predefined routine called the system service dispatcher. The system service dispatcher, in turn, uses the value in that <code>EAX</code> register as an index into a <em>System Service Dispatch Table</em> (SSDT). Using this table, the code jumps to the system service (system call) itself. For our Notepad example, the SSDT entry would point to the <code>NtCreateFile</code> function, implemented by the kernel’s I/O manager.</p>
+</blockquote>
+<h3 id="objects-and-handles">Objects and Handles<a href="#objects-and-handles" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>In Windows, a kernel object is a single, runtime instance of a statically defined object.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>© 2023 Tx0actical</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
