@@ -7,13 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023 Tx0actical</copyright>
-    <lastBuildDate>Sun, 26 Feb 2023 18:48:34 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Feb 2023 15:54:12 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Drivers</title>
-      <link>https://Tx0actical.github.io/tags/drivers/</link>
-      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      <title>Advanced</title>
+      <link>https://Tx0actical.github.io/tags/advanced/</link>
+      <pubDate>Mon, 27 Feb 2023 15:54:12 +0530</pubDate>
       
-      <guid>https://Tx0actical.github.io/tags/drivers/</guid>
+      <guid>https://Tx0actical.github.io/tags/advanced/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Internals</title>
+      <link>https://Tx0actical.github.io/tags/internals/</link>
+      <pubDate>Mon, 27 Feb 2023 15:54:12 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/tags/internals/</guid>
       <description></description>
       <content></content>
     </item>
@@ -21,9 +31,19 @@
     <item>
       <title>Windows</title>
       <link>https://Tx0actical.github.io/tags/windows/</link>
-      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      <pubDate>Mon, 27 Feb 2023 15:54:12 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/tags/windows/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Drivers</title>
+      <link>https://Tx0actical.github.io/tags/drivers/</link>
+      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/tags/drivers/</guid>
       <description></description>
       <content></content>
     </item>
