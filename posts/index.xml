@@ -19,11 +19,12 @@ KMDF (or WDF for that matter) being a Windows thing, you need to understand some
 In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.&lt;/p&gt;
-&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will. With this I wanted to focus on experimentation and a deep-dive explanation, and do something different instead of replaying information that already exists.&lt;/p&gt;
+&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will.&lt;/p&gt;
+&lt;p&gt;With this I wanted to focus on experimentation and a deep-dive explanation, and do something different instead of replaying information that already exists. Outputs of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
 &lt;p&gt;Anyone who&amp;rsquo;s ever dug a little deep about Windows, might be familiar with this image:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/WinArch.png&#34; alt=&#34;WinArch&#34;&gt;
-*Source: Windows Internals: Part 1 *&lt;/p&gt;
-&lt;p&gt;We&amp;rsquo;ll now try to explain this.&lt;/p&gt;
+&lt;em&gt;Source: Windows Internals: Part 1&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll now examine this architecture in detail.&lt;/p&gt;
 &lt;h3 id=&#34;processes&#34;&gt;Processes&lt;/h3&gt;
 &lt;p&gt;A process is a management and containment object which represents an instance of a program. Contrary to popular belief, processes don&amp;rsquo;t run, they &amp;ldquo;manage&amp;rdquo;. Each Windows process is defined by an executive process structure or &lt;code&gt;nt!_EPROCESS&lt;/code&gt;. This structure (&lt;code&gt;typedef struct _EPROCESS EPROCESS, *PEPROCESS&lt;/code&gt; to be exact) is the kernel&amp;rsquo;s representation of a process object. It exists only in kernel memory, user-mode can access indirectly through handles (handles are explained later). The Windows kernel maintains a &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure for every process including -&amp;gt; System Idle Process (PID 0) and System (Process) (PID 4).&lt;/p&gt;
 &lt;p&gt;It is an &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/eprocess&#34;&gt;opaque kernel structure&lt;/a&gt; defined as -&amp;gt;&lt;/p&gt;
@@ -32,11 +33,10 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   ... &lt;span style=&#34;color:#75715e&#34;&gt;// Opaque
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;} EPROCESS, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;PEPROCESS;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;nt!_EPROCESS&lt;/code&gt; and its constituent data structures are contained in the System address space, with the exception of &lt;strong&gt;Process Control Block&lt;/strong&gt; (PCB) which exists in User space.&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;nt!_EPROCESS&lt;/code&gt; and its constituent data structures are contained in the System address space and can be examined from kernel-mode, with the exception of &lt;strong&gt;Process Control Block&lt;/strong&gt; (PCB) which exists in User space.&lt;/p&gt;
 &lt;p&gt;Moreover, the subsystem service &lt;code&gt;csrss.exe&lt;/code&gt; maintains a parallel data structure &lt;code&gt;CSR_PROCESS&lt;/code&gt;. Additionally, the kernel mode part of the subsystem &lt;code&gt;Win32k.sys&lt;/code&gt; maintains a per-process data structure, &lt;code&gt;W32PROCESS&lt;/code&gt;. Except for the &lt;code&gt;idle&lt;/code&gt; process every process has a process object associated with it.&lt;/p&gt;
-&lt;p&gt;To see all processes, use &lt;code&gt;!process 0 0&lt;/code&gt; in the Kernel Debugger.&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
-&lt;p&gt;This post introduces the Kernel Debugger. It is a useful tool to examine internal components. To get started, you&amp;rsquo;ll need to -&amp;gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This post introduces you to the Kernel Debugger. It is a useful tool to examine internal components. To get started, you&amp;rsquo;ll need to -&amp;gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Enable debugging. To do that, in an elevated command prompt, type &lt;code&gt;bcdedit /debug on&lt;/code&gt; and restart.&lt;/li&gt;
 &lt;li&gt;If secure boot is enabled, might need to do additional changes in boot menu (You can avoid the hassle of tinkering with BIOS options. Instead, use a VM. Follow above-mentioned steps, and you&amp;rsquo;ll be good to go).&lt;/li&gt;
@@ -46,7 +46,56 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
 &lt;li&gt;Once there, you can type all the commands in &lt;code&gt;lkd&lt;/code&gt; in command window.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Many other drivers and system components, by registering process-creation notification, can choose to create their own data structure to store information on a per-process basis. The executive functions &lt;code&gt;PsSetCreateProcessNotifyRoutineEx&lt;/code&gt; and &lt;code&gt;PsSetCreateProcessNotifyRoutineEx2&lt;/code&gt; allow this and are documented in WDK. This technique might find its use in AV, EDR/XDR implementations.&lt;/p&gt;
+&lt;p&gt;To see all processes, use &lt;code&gt;!process 0 0&lt;/code&gt; in the Kernel Debugger. But the output would be huge. Instead, we&amp;rsquo;ll use &lt;code&gt;!process&lt;/code&gt; with no arguments which will list information for the process owning the thread that is currently executing on CPU 0, or the current Debugging process.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !process
+PROCESS ffff9f016a6e4080
+    SessionId: 1  Cid: 067c    Peb: 293d469000  ParentCid: 09bc
+    DirBase: 5bb72002  ObjectTable: ffffcd04ce0bdd00  HandleCount: 700.
+    Image: DbgX.Shell.exe
+    VadRoot ffff9f016a9c0450 Vads 697 Clone 0 Private 36707. Modified 1193. Locked 10123.
+    DeviceMap ffffcd04cb15b170
+    Token                             ffffcd04ce048770
+    ElapsedTime                       00:14:32.628
+    UserTime                          00:00:11.062
+    KernelTime                        00:00:02.484
+    QuotaPoolUsage[PagedPool]         689520
+    QuotaPoolUsage[NonPagedPool]      95456
+    Working Set Sizes (now,min,max)  (58644, 50, 345) (234576KB, 200KB, 1380KB)
+    PeakWorkingSetSize                68423
+    VirtualSize                       2102310 Mb
+    PeakVirtualSize                   2102367 Mb
+    PageFaultCount                    206265
+    MemoryPriority                    FOREGROUND
+    BasePriority                      8
+    CommitCharge                      40393
+    Job                               ffff9f016a4a3060
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This returns the address of &lt;strong&gt;Process Environment Block&lt;/strong&gt; (PEB) which is the user-mode representation of the process. It contains the information by image loader, heap manager and other Windows components that need access to it from user-mode. This corresponds to the image -&amp;gt; &lt;code&gt;DbgX.Shell.exe&lt;/code&gt; (which is the current debug shell process). To examine its &lt;code&gt;peb&lt;/code&gt; we need to switch current context to that process, this can be done using &lt;code&gt;.process /p&lt;/code&gt; with the process address. Then examine the &lt;code&gt;peb&lt;/code&gt; using &lt;code&gt;!peb&lt;/code&gt; with the address passed as parameter. The complete command is -&amp;gt; lkd&amp;gt; .&lt;code&gt;process /p ffff9f016a6e4080; !peb 293d469000&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; .process /p ffff9f016a6e4080; !peb 293d469000
+Implicit process is now ffff9f01`6a6e4080
+PEB at 000000293d469000
+    InheritedAddressSpace:    No
+    ReadImageFileExecOptions: No
+    BeingDebugged:            No
+    ImageBaseAddress:         00007ff7fa6e0000
+    NtGlobalFlag:             0
+    NtGlobalFlag2:            0
+    Ldr                       00007ff90a2fc4c0
+    Ldr.Initialized:          Yes
+    Ldr.InInitializationOrderModuleList: 000001e52e003e00 . 000001e558d8f240
+    Ldr.InLoadOrderModuleList:           000001e52e003f70 . 000001e558d8f220
+    Ldr.InMemoryOrderModuleList:         000001e52e003f80 . 000001e558d8f230
+                    Base TimeStamp                     Module
+            7ff7fa6e0000 61735063 Oct 22 16:59:31 2021 C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2210.3001.0_x64__8wekyb3d8bbwe\DbgX.Shell.exe
+            7ff90a190000 b5ced1c6 Aug 28 07:10:14 2066 C:\Windows\SYSTEM32\ntdll.dll
+            7ff908360000 e35abded Nov 14 12:34:53 2090 C:\Windows\System32\KERNEL32.DLL
+            7ff907aa0000 e7e53a4e Apr 14 07:59:26 2093 C:\Windows\System32\KERNELBASE.dll
+            7ff909150000 90a2bc88 Nov 23 03:10:00 2046 C:\Windows\System32\USER32.dll
+            7ff9081b0000 0dcd0213 May 03 13:26:59 1977 C:\Windows\System32\win32u.dll
+            7ff90a0c0000 3ee1d71f Jun 07 05:14:23 2003 C:\Windows\System32\GDI32.dll
+            7ff9078e0000 94124ede Sep 20 08:16:46 2048 C:\Windows\System32\gdi32full.dll
+            7ff907d80000 39255ccf May 19 08:25:03 2000 C:\Windows\System32\msvcp_win.dll
+            7ff907e20000 2bd748bf Apr 22 18:39:11 1993 C:\Windows\System32\ucrtbase.dll
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Many other drivers and system components, by registering process-creation notification, can choose to create their own data structure to store information on a per-process basis. The executive functions &lt;code&gt;PsSetCreateProcessNotifyRoutineEx&lt;/code&gt; and &lt;code&gt;PsSetCreateProcessNotifyRoutineEx2&lt;/code&gt; allow this and are documented in WDK. This technique might find its use in AV, EDR/XDR implementations.&lt;/p&gt;
 &lt;p&gt;You can see the contents of &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure in &lt;code&gt;lkd&lt;/code&gt; (Kernel Debugger). &lt;code&gt;dt nt!_EPROCESS&lt;/code&gt; lists all fields of &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure and their offsets in hexadecimal. Here&amp;rsquo;s what it looks like -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_EPROCESS
    +0x000 Pcb              : _KPROCESS
@@ -61,7 +110,7 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
    +0xb90 SyscallUsage     : Uint4B
    +0xb90 SyscallUsageValues : &amp;lt;unnamed-tag&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
-&lt;p&gt;Usually, you&amp;rsquo;ll find &lt;code&gt;EPROCESS&lt;/code&gt; not &lt;code&gt;nt!_EPROCESS&lt;/code&gt; that&amp;rsquo;s because in the kernel debugger, latter is the symbol for the former, that is used for identification of structures during debugging.&lt;/p&gt;
+&lt;p&gt;Usually, you&amp;rsquo;ll find &lt;code&gt;EPROCESS&lt;/code&gt; not &lt;code&gt;nt!_EPROCESS&lt;/code&gt; that&amp;rsquo;s because in the kernel debugger, latter is the symbol for the former, that is used for identification of functions, varibles and structures during debugging.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;code&gt;dt&lt;/code&gt; (display type) also shows specific contents of one or multiple fields by typing their names following structure name. Like so -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_EPROCESS ProcessLock
@@ -87,7 +136,7 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
    ...
    ntkrnlmp!_KINTERRUPT
    ...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;One of the structures is &lt;code&gt;ntkrnlmp!_KINTERRUPT&lt;/code&gt;. This &lt;code&gt;struct&lt;/code&gt; contains pointers to all &lt;strong&gt;Interrupt Service Routines&lt;/strong&gt; (ISR) registered by the kernel. ISRs execute on CPU whenever an Interrupt or Exception occurs. All ISRs are pointed to by something called an &lt;strong&gt;Interrupt Descriptor Table&lt;/strong&gt; or IDT, which is a CPU defined data structure. ISRs basically tell the CPU what code to execute when it encounters an interrupt.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The last structure (in the snipped output above) is &lt;code&gt;ntkrnlmp!_KINTERRUPT&lt;/code&gt;. This &lt;code&gt;struct&lt;/code&gt; contains pointers to all &lt;strong&gt;Interrupt Service Routines&lt;/strong&gt; (ISR) registered by the kernel. ISRs execute on CPU whenever an Interrupt or Exception occurs. All ISRs are pointed to by something called an &lt;strong&gt;Interrupt Descriptor Table&lt;/strong&gt; or IDT, which is a CPU defined data structure. ISRs basically tell the CPU what code to execute when it encounters an interrupt.&lt;/p&gt;
 &lt;p&gt;You can view the contents of the IDT, including information on what trap handlers Windows has assigned to interrupts (including exceptions and IRQs), using the &lt;code&gt;!idt&lt;/code&gt; command in &lt;code&gt;lkd&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !idt
 
@@ -102,14 +151,6 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
    09:	fffff802169395c0 nt!KiNpxSegmentOverrunAbortShadow
    0a:	fffff80216939640 nt!KiInvalidTssFaultShadow
    0b:	fffff802169396c0 nt!KiSegmentNotPresentFaultShadow
-   ...
-   12:	fffff802169399c0 nt!KiMcheckAbortShadow	Stack = 0xFFFFF80219B215D0
-   13:	fffff80216939ac0 nt!KiXmmExceptionShadow
-   14:	fffff80216939b40 nt!KiVirtualizationExceptionShadow
-   ...
-   35:	fffff8021693a468 nt!HalpInterruptCmciService (KINTERRUPT fffff80216d38e60)
-   36:	fffff8021693a470 nt!HalpInterruptCmciService (KINTERRUPT fffff80216d390a0)
-   50:	fffff8021693a540 0xfffff80218609390 (KINTERRUPT ffffb081801e0a00)
    ...
    61:	fffff8021693a5c8 0xfffff80218355b20 (KINTERRUPT ffffb081807fec80)
    62:	fffff8021693a5d0 0xfffff802191df2a0 (KINTERRUPT ffffb081807fe640)
@@ -188,7 +229,7 @@ Memory read error 0000000000000114
 &lt;p&gt;All of the above have different use cases but eventually, all execution paths lead to &lt;code&gt;CreateProcessInternal&lt;/code&gt; which calls &lt;code&gt;NtCreateUserProcess&lt;/code&gt; (part of) which makes the transition to kernel mode and continue the kernel mode part of process creation with the same name. As the name suggests, &lt;code&gt;NtCreateUserProcess&lt;/code&gt; creates a user process. A user cannot create a native process, such as &lt;code&gt;smss.exe&lt;/code&gt; and &lt;code&gt;csrss.exe&lt;/code&gt;, as &lt;code&gt;CreateProcessInternal&lt;/code&gt; function will reject images with native subsystem image type.&lt;/p&gt;
 &lt;p&gt;Apart from NT Processes, the Kernel Executive supports additional processes, that are created bypassing WinAPI, such as Native processes, Minimal or Pico Processes. These would be beyond the scope of this post.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;You might be following along in a VM. If you are using VMware, you might notice performance slowdowns or hangs, which can get quite frustrating. There is a good way to get some more performace!&lt;/p&gt;
+&lt;p&gt;You might be following along in a VM. If you are using VMware, you might notice performance slowdowns or hangs, which can get quite frustrating. There is a good way to get more performace!&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;If you&amp;rsquo;re using VMWare Player, make sure the VM is &amp;ldquo;Shut Down&amp;rdquo; and not &amp;ldquo;Suspended&amp;rdquo;. Then, navigate to the Virtual Machine working directory. Locate the config file &lt;code&gt;.vmx&lt;/code&gt;. Open that in an editor and add the following line to it -&amp;gt; &lt;code&gt;ulm.disableMitigations = &amp;quot;TRUE&amp;quot;&lt;/code&gt;. This will disable side-channel mitigations applied to your VM.&lt;/li&gt;
 &lt;li&gt;If you&amp;rsquo;re using Workstation pro, then you can directly disable side-channel mitigations in &amp;ldquo;Edit Virtual Machine Settings&amp;rdquo;.&lt;/li&gt;
@@ -307,10 +348,35 @@ ntdll!LdrpDoDebuggerBreak+0x30:
 &lt;h3 id=&#34;objects-and-handles&#34;&gt;Objects and Handles&lt;/h3&gt;
 &lt;p&gt;In Windows, a kernel object is a single, runtime instance of a statically defined object. They are kernel data structures representing commonly used facilities like files, registry keys, processes, threads, devices etc. that are managed by the Object Manager, a component of the Windows Kernel. All such objects are preceded by an &lt;code&gt;nt!_OBJECT_HEADER&lt;/code&gt; structure that contains information about the object and is used to manage the life cycle of the object, allow the object to be uniquely named, secure the object by applying access control, invoke object type specific methods and track the allocator&amp;rsquo;s quota usage.&lt;/p&gt;
 &lt;p&gt;Handles are references returned to caller by the callee (APIs in this case) which are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. &lt;code&gt;nt!_HANDLE_TABLE_ENTRY&lt;/code&gt; represents an individual entry in the process&amp;rsquo; handle table. Handle tables are allocated from Paged Pool. When a process terminates the function &lt;code&gt;ExSweepHandleTable()&lt;/code&gt; closes all handles in the handle table of that process.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;!handle&lt;/code&gt; can be used to examine the handle table of any process. Output would be very large!&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;***************************
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;subsystems-subsystem-dlls-and-ntdlldll&#34;&gt;Subsystems, Subsystem DLLs and ntdll.dll&lt;/h3&gt;
-&lt;p&gt;A subsystem is a facility by which Windows exposes some subset of the base Windows executive system services to application programs. This means that some things that can be done from an application built on one subsystem can&amp;rsquo;t be done by another application built on another subsystem. Each executable image &lt;code&gt;.exe&lt;/code&gt; is bound to only one subsystem. During process creation, the process creation code examines the sub-system type header code and notify the target subsystem of the new process. This type code is defined in the &lt;code&gt;/SUBSYSTEM&lt;/code&gt; linker flag of Visual Studio Linker.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;!handle&lt;/code&gt; can be used to examine the handle table of currently running process. Output would be very large! Hence, `&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !handle
+
+PROCESS ffff9f016a6e4080
+    SessionId: 1  Cid: 067c    Peb: 293d469000  ParentCid: 09bc
+    DirBase: 5bb72002  ObjectTable: ffffcd04ce0bdd00  HandleCount: 754.
+    Image: DbgX.Shell.exe
+
+Handle table at ffffcd04ce0bdd00 with 758 entries in use
+
+0004: Object: ffff9f016aef20e0  GrantedAccess: 001f0003 (Protected) (Inherit) Entry: ffffcd04cd8f7010
+Object: ffff9f016aef20e0  Type: (ffff9f01638b30c0) Event
+    ObjectHeader: ffff9f016aef20b0 (new version)
+        HandleCount: 1  PointerCount: 32768
+
+0008: Object: ffff9f016aef1be0  GrantedAccess: 001f0003 (Protected) (Inherit) Entry: ffffcd04cd8f7020
+Object: ffff9f016aef1be0  Type: (ffff9f01638b30c0) Event
+    ObjectHeader: ffff9f016aef1bb0 (new version)
+        HandleCount: 1  PointerCount: 32755
+
+000c: Object: ffff9f016abbeee0  GrantedAccess: 00000001 (Protected) (Inherit) Entry: ffffcd04cd8f7030
+Object: ffff9f016abbeee0  Type: (ffff9f01638c2380) WaitCompletionPacket
+    ObjectHeader: ffff9f016abbeeb0 (new version)
+        HandleCount: 1  PointerCount: 32755
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output displays the handle table of current process and properties of individual handles, including a total of 758 entries. The &lt;code&gt;HandleCount&lt;/code&gt; field shows 754 entries, but the OS allocates additional handles for improved performance, resulting in 758 entries in the table.&lt;/p&gt;
+&lt;h3 id=&#34;subsystems-subsystem-dlls-and-ntdlldll&#34;&gt;Subsystems, Subsystem DLLs and ntdll.dll&lt;/h3&gt;
+&lt;p&gt;A subsystem is a facility by which Windows exposes some subset of the base Windows executive system services to application programs.&lt;/p&gt;
+&lt;p&gt;This means that some things that can be done from an application built on one subsystem can&amp;rsquo;t be done by another application built on another subsystem. Each executable image &lt;code&gt;.exe&lt;/code&gt; is bound to only one subsystem. Subsystems are started by the Session Manager (Smss.exe) process. Subsystem startup information is stored under the registry key &lt;code&gt;HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\SubSystems&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;During process creation, the process creation code examines the sub-system type header code and notify the target subsystem of the new process. This type code is defined in the &lt;code&gt;/SUBSYSTEM&lt;/code&gt; linker flag of Visual Studio Linker.&lt;/p&gt;
 &lt;p&gt;You can view the image subsystem type using the Dependency Walker (depends.exe). If you check &lt;em&gt;notepad.exe&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34; alt=&#34;depends&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The role of subsystem DLLs is to translate a documented function into the appropriate internal (and generally undocumented) native system service calls implemented mostly in &lt;code&gt;NTDLL.DLL&lt;/code&gt;.&lt;/p&gt;
