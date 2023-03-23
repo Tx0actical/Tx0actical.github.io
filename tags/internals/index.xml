@@ -346,11 +346,21 @@ ntdll!LdrpDoDebuggerBreak+0x30:
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As mentioned above, &lt;code&gt;EAX&lt;/code&gt; is set with SSN -&amp;gt; 0x55. This is the system call number. Then notice the &lt;code&gt;syscall&lt;/code&gt; instruction. This switches the processor to kernel mode, jumping to the SSDT entry corresponding to the value inside &lt;code&gt;EAX&lt;/code&gt;. Predictably, 0x55 corresponds to &lt;code&gt;NtCreateFile&lt;/code&gt;. Notice the flag value set to 1 at offset 0x308 to &lt;code&gt;SharedUserData&lt;/code&gt;. If this flag is set, the execution will take another path using the &lt;code&gt;int 2Eh&lt;/code&gt; instruction on the second to last line of the output above. This flag corresponds to a specific Credential Guard VBS (Virtualization Based Security) feature as the hypervisor can better react to &lt;code&gt;int&lt;/code&gt; instruction rather than &lt;code&gt;syscall&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;All right! Enough for this one!&lt;/p&gt;
 &lt;h3 id=&#34;objects-and-handles&#34;&gt;Objects and Handles&lt;/h3&gt;
-&lt;p&gt;In Windows, an object is a single, runtime instance of a statically defined object. They are kernel data structures representing commonly used facilities like files, registry keys, processes, threads, devices, etc. that are managed by the Object Manager, a component of the Windows Kernel.&lt;/p&gt;
-&lt;p&gt;Windows has three primary types of objects: Executive Objects, Kernel Objects, and GDI/User Objects. Executive objects are&lt;/p&gt;
+&lt;p&gt;In Windows, an object is a single, runtime instance of a statically defined object. They are kernel data structures representing commonly used facilities like files, registry keys, processes, threads, devices, etc. that are managed by the Object Manager, a component of the Windows Kernel. Not all objects have names, for eg., processes and threads don&amp;rsquo;t have names - they have IDs. That’s why the &lt;code&gt;OpenProcess()&lt;/code&gt; and &lt;code&gt;OpenThread()&lt;/code&gt; functions require a process/thread identifier (a number) rather than a string-base name&lt;/p&gt;
+&lt;p&gt;Windows has three primary types of objects: Executive Objects, Kernel Objects, and GDI/User Objects.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/ObjectCat.png&#34; alt=&#34;a&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Executive objects are implemented by various components of the executive (such as process manager, memory manager, I/O subsystem).&lt;/li&gt;
+&lt;li&gt;Kernel objects are a more primitive set of objects implemented by the Windows kernel. These objects are not visible to user-mode code but are created and used only within the executive.&lt;/li&gt;
+&lt;li&gt;The majority of GDI/User objects belong to the Windows subsystem (Win32k.sys) and do not interact with the kernel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;WinObj tool from Sysinternals displays all objects in the system.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/WinObj.png&#34; alt=&#34;WinObj&#34;&gt;&lt;/p&gt;
 &lt;p&gt;All such objects are preceded by an &lt;code&gt;nt!_OBJECT_HEADER&lt;/code&gt; structure that contains information about the object and is used to manage the life cycle of the object, allow the object to be uniquely named, secure the object by applying access control, invoke object type-specific methods and track the allocator&amp;rsquo;s quota usage.&lt;/p&gt;
-&lt;p&gt;Handles are references returned to the caller by the callee (APIs in this case) which are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. &lt;code&gt;nt!_HANDLE_TABLE_ENTRY&lt;/code&gt; represents an individual entry in the process handle table. Handle tables are allocated from Paged Pool. When a process terminates the function &lt;code&gt;ExSweepHandleTable()&lt;/code&gt; closes all handles in the handle table of that process.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;!handle&lt;/code&gt; can be used to examine the handle table of the currently running process. The output would be very large! Hence, `&lt;/p&gt;
+&lt;p&gt;Handles are references returned to the caller by the callee (APIs in this case) which are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. Handles are always a multiple of 4, and 0 is never a valid handle value.&lt;/p&gt;
+&lt;p&gt;The kernel (and driver) code can either work with handle or pointer to an object. Handles can be converted to points using &lt;code&gt;ObDereferenceObjectByHandle()&lt;/code&gt; and &lt;code&gt;ObReferenceObjectByHandle()&lt;/code&gt; functions. The former function returns a pointer to the object and the latter function increments the reference count of the object. The reference count is decremented when the object is no longer needed. The object is freed when the reference count reaches 0. Object manager destroys the object if its reference count reaches 0.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;nt!_HANDLE_TABLE_ENTRY&lt;/code&gt; represents an individual entry in the process handle table. Handle tables are allocated from Paged Pool. When a process terminates the function &lt;code&gt;ExSweepHandleTable()&lt;/code&gt; closes all handles in the handle table of that process.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;!handle&lt;/code&gt; can be used to examine the handle table of the currently running process. The output would be very large!&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !handle
 
 PROCESS ffff9f016a6e4080
@@ -392,7 +402,7 @@ drivers maintain portability by calling the HAL routines when they need platform
 &lt;p&gt;One of the main roles of Hyper-V in Windows 10 and Windows Server 2016 (and later) is to enable support for Virtualization Based Security (VBS).&lt;/p&gt;
 &lt;p&gt;VBS provides an extra layer of security as the normal OS exists as a Hyper-V VM. Windows uses Virtual Trust Levels (VTLs), which use the hypervisor to configure virtual trust levels. This is to address challenges arising from malicious driver code which could access kernel-mode memory.&lt;/p&gt;
 &lt;p&gt;VBS provides extra security on top of processor isolation.&lt;/p&gt;
-&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+&lt;h3 id=&#34;conclusion-and-credits&#34;&gt;Conclusion and Credits&lt;/h3&gt;
 &lt;p&gt;In this post, you learned about Windows Processes, Threads, and System Services and other specific topics like Virtual Memory, Objects, and Handles.&lt;/p&gt;
 &lt;p&gt;In the next post, you&amp;rsquo;ll start building your first driver.&lt;/p&gt;
 &lt;p&gt;Stay Tuned!&lt;/p&gt;
