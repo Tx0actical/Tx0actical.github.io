@@ -422,7 +422,7 @@ Object: ffff9f016abbeee0  Type: (ffff9f01638c2380) WaitCompletionPacket
 &lt;p&gt;A subsystem is a facility by which Windows exposes some subset of the base Windows executive system services to application programs.&lt;/p&gt;
 &lt;p&gt;This means that some things that can be done from an application built on one subsystem can&amp;rsquo;t be done by another application built on another subsystem. Each executable image &lt;code&gt;.exe&lt;/code&gt; is bound to only one subsystem. Subsystems are started by the Session Manager (Smss.exe) process. Subsystem startup information is stored under the registry key &lt;code&gt;HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\SubSystems&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;During process creation, the process creation code examines the sub-system type header code and notifies the target subsystem of the new process. This type of code is defined in the &lt;code&gt;/SUBSYSTEM&lt;/code&gt; linker flag of Visual Studio Linker.&lt;/p&gt;
-&lt;p&gt;You can view the image subsystem type using the Dependency Walker (depends.exe). If you check &lt;em&gt;notepad.exe&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;You can view the image subsystem type using the Dependency Walker (depends.exe). If you check &lt;em&gt;notepad.exe&lt;/em&gt; -&amp;gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34; alt=&#34;depends&#34;&gt;
 &lt;em&gt;Dependency Listing of Notepad.exe in depends.exe&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The role of subsystem DLLs is to translate a documented function into the appropriate internal (and generally undocumented) native system service calls implemented mostly in &lt;code&gt;NTDLL.DLL&lt;/code&gt;.&lt;/p&gt;
