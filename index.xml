@@ -47,14 +47,14 @@ Tx0actical. Out.</description>
       <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
       <description>Hello.
 KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.
-In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will.</description>
+In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.&lt;/p&gt;
-&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will.&lt;/p&gt;
-&lt;p&gt;With this I wanted to focus on experimentation and a deep-dive explanation, and do something different instead of replaying information that already exists. Outputs of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
-&lt;p&gt;Anyone who&amp;rsquo;s ever dug a little deep about Windows, might be familiar with this image:&lt;/p&gt;
+&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.&lt;/p&gt;
+&lt;p&gt;With this, I wanted to focus on experimentation and a deep-dive explanation and do something different instead of replaying information that already exists. Outputs of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
+&lt;p&gt;Anyone who&amp;rsquo;s ever dug a little deep about Windows might be familiar with this image:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/WinArch.png&#34; alt=&#34;WinArch&#34;&gt;
-&lt;em&gt;Source: Windows Internals: Part 1&lt;/em&gt;&lt;/p&gt;
+&lt;em&gt;General Architecture, Source: Windows Internals: Part 1&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll now examine this architecture in detail.&lt;/p&gt;
 &lt;h3 id=&#34;processes&#34;&gt;Processes&lt;/h3&gt;
 &lt;p&gt;A process is a management and containment object which represents an instance of a program. Contrary to popular belief, processes don&amp;rsquo;t run, they &amp;ldquo;manage&amp;rdquo;. Each Windows process is defined by an executive process structure or &lt;code&gt;nt!_EPROCESS&lt;/code&gt;. This structure (&lt;code&gt;typedef struct _EPROCESS EPROCESS, *PEPROCESS&lt;/code&gt; to be exact) is the kernel&amp;rsquo;s representation of a process object. It exists only in kernel memory, user-mode can access indirectly through handles (handles are explained later). The Windows kernel maintains a &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure for every process including -&amp;gt; System Idle Process (PID 0) and System (Process) (PID 4).&lt;/p&gt;
@@ -64,17 +64,17 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   ... &lt;span style=&#34;color:#75715e&#34;&gt;// Opaque
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;} EPROCESS, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;PEPROCESS;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;nt!_EPROCESS&lt;/code&gt; and its constituent data structures are contained in the System address space and can be examined from kernel-mode, with the exception of &lt;strong&gt;Process Control Block&lt;/strong&gt; (PCB) which exists in User space.&lt;/p&gt;
-&lt;p&gt;Moreover, the subsystem service &lt;code&gt;csrss.exe&lt;/code&gt; maintains a parallel data structure &lt;code&gt;CSR_PROCESS&lt;/code&gt;. Additionally, the kernel mode part of the subsystem &lt;code&gt;Win32k.sys&lt;/code&gt; maintains a per-process data structure, &lt;code&gt;W32PROCESS&lt;/code&gt;. Except for the &lt;code&gt;idle&lt;/code&gt; process every process has a process object associated with it.&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;nt!_EPROCESS&lt;/code&gt; and its constituent data structures are contained in the System address space and can be examined from kernel mode, except for &lt;strong&gt;Process Control Block&lt;/strong&gt; (PCB) which exists in User space.&lt;/p&gt;
+&lt;p&gt;Moreover, the subsystem service &lt;code&gt;csrss.exe&lt;/code&gt; maintains a parallel data structure &lt;code&gt;CSR_PROCESS&lt;/code&gt;. Additionally, the kernel mode part of the subsystem &lt;code&gt;Win32k.sys&lt;/code&gt; maintains a per-process data structure, &lt;code&gt;W32PROCESS&lt;/code&gt;. Except for the &lt;code&gt;idle&lt;/code&gt; process, every process has a process object associated with it.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;This post introduces you to the Kernel Debugger. It is a useful tool to examine internal components. To get started, you&amp;rsquo;ll need to -&amp;gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Enable debugging. To do that, in an elevated command prompt, type &lt;code&gt;bcdedit /debug on&lt;/code&gt; and restart.&lt;/li&gt;
-&lt;li&gt;If secure boot is enabled, might need to do additional changes in boot menu (You can avoid the hassle of tinkering with BIOS options. Instead, use a VM. Follow above-mentioned steps, and you&amp;rsquo;ll be good to go).&lt;/li&gt;
+&lt;li&gt;If secure boot is enabled, might need to do additional changes in the boot menu (You can avoid the hassle of tinkering with BIOS options. Instead, use a VM. Follow the above-mentioned steps, and you&amp;rsquo;ll be good to go).&lt;/li&gt;
 &lt;li&gt;Install &amp;ldquo;WinDbg Preview&amp;rdquo; from Microsoft Store.&lt;/li&gt;
 &lt;li&gt;After it&amp;rsquo;s installed, go to &amp;lsquo;Home&amp;rsquo; -&amp;gt;
 &amp;lsquo;Attach to kernel&amp;rsquo; -&amp;gt; &lt;em&gt;Select&lt;/em&gt; &amp;lsquo;Local&amp;rsquo;. This will start a Local Kernel Debugging Session.&lt;/li&gt;
-&lt;li&gt;Once there, you can type all the commands in &lt;code&gt;lkd&lt;/code&gt; in command window.&lt;/li&gt;
+&lt;li&gt;Once there, you can type all the commands in &lt;code&gt;lkd&lt;/code&gt; in the command window.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;To see all processes, use &lt;code&gt;!process 0 0&lt;/code&gt; in the Kernel Debugger. But the output would be huge. Instead, we&amp;rsquo;ll use &lt;code&gt;!process&lt;/code&gt; with no arguments which will list information for the process owning the thread that is currently executing on CPU 0, or the current Debugging process.&lt;/p&gt;
@@ -100,7 +100,7 @@ PROCESS ffff9f016a6e4080
     BasePriority                      8
     CommitCharge                      40393
     Job                               ffff9f016a4a3060
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This returns the address of &lt;strong&gt;Process Environment Block&lt;/strong&gt; (PEB) which is the user-mode representation of the process. It contains the information by image loader, heap manager and other Windows components that need access to it from user-mode. This corresponds to the image -&amp;gt; &lt;code&gt;DbgX.Shell.exe&lt;/code&gt; (which is the current debug shell process). To examine its &lt;code&gt;peb&lt;/code&gt; we need to switch current context to that process, this can be done using &lt;code&gt;.process /p&lt;/code&gt; with the process address. Then examine the &lt;code&gt;peb&lt;/code&gt; using &lt;code&gt;!peb&lt;/code&gt; with the address passed as parameter. The complete command is -&amp;gt; lkd&amp;gt; .&lt;code&gt;process /p ffff9f016a6e4080; !peb 293d469000&lt;/code&gt;.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This returns the address of &lt;strong&gt;Process Environment Block&lt;/strong&gt; (PEB) which is the user-mode representation of the process. It contains the information by image loader, heap manager, and other Windows components that need access to it from user mode. This corresponds to the image -&amp;gt; &lt;code&gt;DbgX.Shell.exe&lt;/code&gt; (which is the current debug shell process). To examine its &lt;code&gt;peb&lt;/code&gt; we need to switch the current context to that process, this can be done using &lt;code&gt;.process /p&lt;/code&gt; with the process address, &lt;code&gt;0xffff9f016a6e4080&lt;/code&gt; in this case. Then examine the &lt;code&gt;peb&lt;/code&gt; using &lt;code&gt;!peb&lt;/code&gt; with the address passed as a parameter, which is &lt;code&gt;0x293d469000&lt;/code&gt;. The complete command is -&amp;gt; &lt;code&gt;.process /p ffff9f016a6e4080; !peb 293d469000&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; .process /p ffff9f016a6e4080; !peb 293d469000
 Implicit process is now ffff9f01`6a6e4080
 PEB at 000000293d469000
@@ -126,7 +126,7 @@ PEB at 000000293d469000
             7ff9078e0000 94124ede Sep 20 08:16:46 2048 C:\Windows\System32\gdi32full.dll
             7ff907d80000 39255ccf May 19 08:25:03 2000 C:\Windows\System32\msvcp_win.dll
             7ff907e20000 2bd748bf Apr 22 18:39:11 1993 C:\Windows\System32\ucrtbase.dll
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Many other drivers and system components, by registering process-creation notification, can choose to create their own data structure to store information on a per-process basis. The executive functions &lt;code&gt;PsSetCreateProcessNotifyRoutineEx&lt;/code&gt; and &lt;code&gt;PsSetCreateProcessNotifyRoutineEx2&lt;/code&gt; allow this and are documented in WDK. This technique might find its use in AV, EDR/XDR implementations.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Many other drivers and system components, by registering process-creation notifications, can choose to create their own data structure to store information on a per-process basis. The executive functions &lt;code&gt;PsSetCreateProcessNotifyRoutineEx&lt;/code&gt; and &lt;code&gt;PsSetCreateProcessNotifyRoutineEx2&lt;/code&gt; allow this and are documented in WDK. This technique might find its use in AV, EDR/XDR implementations.&lt;/p&gt;
 &lt;p&gt;You can see the contents of &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure in &lt;code&gt;lkd&lt;/code&gt; (Kernel Debugger). &lt;code&gt;dt nt!_EPROCESS&lt;/code&gt; lists all fields of &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure and their offsets in hexadecimal. Here&amp;rsquo;s what it looks like -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_EPROCESS
    +0x000 Pcb              : _KPROCESS
@@ -141,13 +141,13 @@ PEB at 000000293d469000
    +0xb90 SyscallUsage     : Uint4B
    +0xb90 SyscallUsageValues : &amp;lt;unnamed-tag&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
-&lt;p&gt;Usually, you&amp;rsquo;ll find &lt;code&gt;EPROCESS&lt;/code&gt; not &lt;code&gt;nt!_EPROCESS&lt;/code&gt; that&amp;rsquo;s because in the kernel debugger, latter is the symbol for the former, that is used for identification of functions, varibles and structures during debugging.&lt;/p&gt;
+&lt;p&gt;Usually, you&amp;rsquo;ll find &lt;code&gt;EPROCESS&lt;/code&gt; not &lt;code&gt;nt!_EPROCESS&lt;/code&gt; that&amp;rsquo;s because in the kernel debugger, the latter is the symbol for the former, which is used for identification of functions, variables, and structures during debugging.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;&lt;code&gt;dt&lt;/code&gt; (display type) also shows specific contents of one or multiple fields by typing their names following structure name. Like so -&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;dt&lt;/code&gt; (display type) also shows specific contents of one or multiple fields by typing their names following the structure name. Like so -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_EPROCESS ProcessLock
    +0x438 ProcessLock : _EX_PUSH_LOCK
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the output above, the command examines &lt;code&gt;ProcessLock&lt;/code&gt; (&lt;code&gt;_EX_PUSH_LOCK&lt;/code&gt;) field.&lt;/p&gt;
-&lt;p&gt;To see a list of kernel structures use &lt;code&gt;dt nt!_*&lt;/code&gt;. Note that &lt;code&gt;ntkrnlmp&lt;/code&gt; is the internal name of 64-bit kernel.&lt;/p&gt;
+&lt;p&gt;To see a list of kernel structures use &lt;code&gt;dt nt!_*&lt;/code&gt;. Note that &lt;code&gt;ntkrnlmp&lt;/code&gt; is the internal name of the 64-bit kernel.&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_*
    ntkrnlmp!_LIST_ENTRY
    ntkrnlmp!_LIST_ENTRY
@@ -167,30 +167,30 @@ PEB at 000000293d469000
    ...
    ntkrnlmp!_KINTERRUPT
    ...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The last structure (in the snipped output above) is &lt;code&gt;ntkrnlmp!_KINTERRUPT&lt;/code&gt;. This &lt;code&gt;struct&lt;/code&gt; contains pointers to all &lt;strong&gt;Interrupt Service Routines&lt;/strong&gt; (ISR) registered by the kernel. ISRs execute on CPU whenever an Interrupt or Exception occurs. All ISRs are pointed to by something called an &lt;strong&gt;Interrupt Descriptor Table&lt;/strong&gt; or IDT, which is a CPU defined data structure. ISRs basically tell the CPU what code to execute when it encounters an interrupt.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The last structure (in the snipped output above) is &lt;code&gt;ntkrnlmp!_KINTERRUPT&lt;/code&gt;. This &lt;code&gt;struct&lt;/code&gt; contains pointers to all &lt;strong&gt;Interrupt Service Routines&lt;/strong&gt; (ISR) registered by the kernel. ISRs execute on the CPU whenever an Interrupt or Exception occurs. All ISRs are pointed to by something called an &lt;strong&gt;Interrupt Descriptor Table&lt;/strong&gt; or IDT, which is a CPU-defined data structure. ISRs tell the CPU what code to execute when it encounters an interrupt.&lt;/p&gt;
 &lt;p&gt;You can view the contents of the IDT, including information on what trap handlers Windows has assigned to interrupts (including exceptions and IRQs), using the &lt;code&gt;!idt&lt;/code&gt; command in &lt;code&gt;lkd&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !idt
 
    Dumping IDT: fffff80219b1d000
 
-   00:	fffff80216939100 nt!KiDivideErrorFaultShadow
-   01:	fffff80216939180 nt!KiDebugTrapOrFaultShadow	Stack = 0xFFFFF80219B219D0
-   02:	fffff80216939240 nt!KiNmiInterruptShadow	Stack = 0xFFFFF80219B217D0
+   00:   fffff80216939100 nt!KiDivideErrorFaultShadow
+   01:   fffff80216939180 nt!KiDebugTrapOrFaultShadow Stack = 0xFFFFF80219B219D0
+   02:   fffff80216939240 nt!KiNmiInterruptShadow  Stack = 0xFFFFF80219B217D0
    ...
-   07:	fffff802169394c0 nt!KiNpxNotAvailableFaultShadow
-   08:	fffff80216939540 nt!KiDoubleFaultAbortShadow	Stack = 0xFFFFF80219B213D0
-   09:	fffff802169395c0 nt!KiNpxSegmentOverrunAbortShadow
-   0a:	fffff80216939640 nt!KiInvalidTssFaultShadow
-   0b:	fffff802169396c0 nt!KiSegmentNotPresentFaultShadow
+   07:   fffff802169394c0 nt!KiNpxNotAvailableFaultShadow
+   08:   fffff80216939540 nt!KiDoubleFaultAbortShadow Stack = 0xFFFFF80219B213D0
+   09:   fffff802169395c0 nt!KiNpxSegmentOverrunAbortShadow
+   0a:   fffff80216939640 nt!KiInvalidTssFaultShadow
+   0b:   fffff802169396c0 nt!KiSegmentNotPresentFaultShadow
    ...
-   61:	fffff8021693a5c8 0xfffff80218355b20 (KINTERRUPT ffffb081807fec80)
-   62:	fffff8021693a5d0 0xfffff802191df2a0 (KINTERRUPT ffffb081807fe640)
+   61:   fffff8021693a5c8 0xfffff80218355b20 (KINTERRUPT ffffb081807fec80)
+   62:   fffff8021693a5d0 0xfffff802191df2a0 (KINTERRUPT ffffb081807fe640)
    ...
-   e3:	fffff8021693a9d8 nt!HalpInterruptDeferredRecoveryService (KINTERRUPT fffff80216d38f80)
-   fd:	fffff8021693aaa8 nt!HalpTimerProfileInterrupt (KINTERRUPT fffff80216d399a0)
-   fe:	fffff8021693aab0 nt!HalpPerfInterrupt (KINTERRUPT fffff80216d39640)
+   e3:   fffff8021693a9d8 nt!HalpInterruptDeferredRecoveryService (KINTERRUPT fffff80216d38f80)
+   fd:   fffff8021693aaa8 nt!HalpTimerProfileInterrupt (KINTERRUPT fffff80216d399a0)
+   fe:   fffff8021693aab0 nt!HalpPerfInterrupt (KINTERRUPT fffff80216d39640)
 &lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
-&lt;p&gt;Traps are a superset of Interrupts and Exceptions, a trap frame stores thread context and is a subset of thread&amp;rsquo;s complete execution context. The kernel also treats system services as exceptions (although they are also technically system traps).&lt;/p&gt;
+&lt;p&gt;Traps are a superset of Interrupts and Exceptions, a trap frame stores thread context and is a subset of the thread&amp;rsquo;s complete execution context. The kernel also treats system services as exceptions (although they are also technically system traps).&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;The IDT has 256 entries, each one of which points to an ISR. The interrupt vector is the index of a particular slot in the IDT. The &lt;code&gt;nt!_KINTERRUPT&lt;/code&gt; structure represents a driver&amp;rsquo;s registration of an ISR for one of these vectors.&lt;/p&gt;
 &lt;p&gt;Use the &lt;code&gt;-r&lt;/code&gt; flag to recursively examine all structures within &lt;code&gt;nt!_KINTERRUPT&lt;/code&gt;, a number after &lt;code&gt;-r&lt;/code&gt; determines the depth of recursion.&lt;/p&gt;
@@ -210,9 +210,9 @@ PEB at 000000293d469000
    +0x030 ServiceContext   : Ptr64 Void
    +0x038 SpinLock         : Uint8B
    ...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note the repeated occurance of &lt;code&gt;Flink&lt;/code&gt; (&lt;code&gt;struct _LIST_ENTRY *Flink&lt;/code&gt;) and &lt;code&gt;Blink&lt;/code&gt; (&lt;code&gt;struct _LIST_ENTRY *Blink&lt;/code&gt;) fields. This makes sense as kernel uses circular doubly linked-list, called &lt;code&gt;ActiveProcessLink&lt;/code&gt; for internal data structures. Each field is of the type &lt;code&gt;LIST_ENTRY&lt;/code&gt; (&lt;code&gt;typedef struct _LIST_ENTRY LIST_ENTRY, *PLIST_ENTRY&lt;/code&gt;). &lt;code&gt;Flink&lt;/code&gt; points to the next node, while &lt;code&gt;Blink&lt;/code&gt; points to the previous one.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note the repeated occurrence of &lt;code&gt;Flink&lt;/code&gt; (&lt;code&gt;struct _LIST_ENTRY *Flink&lt;/code&gt;) and &lt;code&gt;Blink&lt;/code&gt; (&lt;code&gt;struct _LIST_ENTRY *Blink&lt;/code&gt;) fields. This makes sense as the kernel uses a circular doubly linked-list, called &lt;code&gt;ActiveProcessLink&lt;/code&gt; for internal data structures. Each field is of the type &lt;code&gt;LIST_ENTRY&lt;/code&gt; (&lt;code&gt;typedef struct _LIST_ENTRY LIST_ENTRY, *PLIST_ENTRY&lt;/code&gt;). &lt;code&gt;Flink&lt;/code&gt; points to the next node, while &lt;code&gt;Blink&lt;/code&gt; points to the previous one.&lt;/p&gt;
 &lt;p&gt;All &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structures are similarly linked to form &lt;code&gt;ActiveProcessLink&lt;/code&gt; with the &lt;code&gt;ListHead&lt;/code&gt; stored in &lt;code&gt;nt!PsActiveProcessHead&lt;/code&gt;. &lt;code&gt;!process&lt;/code&gt; displays information from &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure.&lt;/p&gt;
-&lt;p&gt;I noted that if recursion depth is increased to &lt;code&gt;-r 4&lt;/code&gt;, it apparently breaks the output -&amp;gt;&lt;/p&gt;
+&lt;p&gt;I noted that if recursion depth is increased to &lt;code&gt;-r 4&lt;/code&gt;, it breaks the output -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_KINTERRUPT -r 4
    +0x000 Type             : ??
    +0x002 Size             : ??
@@ -248,28 +248,28 @@ Memory read error 0000000000000114
 &lt;p&gt;A process can be created using several WinAPI functions -&amp;gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;code&gt;CreateProcessA&lt;/code&gt; -&amp;gt; Most basic function which attempts to create a process and its primary thread with same access token as the creating process. If a different token is required, &lt;code&gt;CreateProcessAsUser&lt;/code&gt; can be used.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CreateProcessA&lt;/code&gt; -&amp;gt; Most basic function which attempts to create a process and its primary thread with the same access token as the creating process. If a different token is required, &lt;code&gt;CreateProcessAsUser&lt;/code&gt; can be used.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;CreateProcessWithTokenW&lt;/code&gt; -&amp;gt; Part of the &lt;code&gt;advapi32.dll&lt;/code&gt;, it is similar to &lt;code&gt;CreateProcessAsUser&lt;/code&gt; the difference being the privileges required for the caller.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;code&gt;CreateProcessWithLogonW&lt;/code&gt; -&amp;gt; A handy shortcut to logon with a given user&amp;rsquo;s credentials (user, domain, and password).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CreateProcessWithLogonW&lt;/code&gt; -&amp;gt; A handy shortcut to log on with a given user&amp;rsquo;s credentials (user, domain, and password).&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;All of the above have different use cases but eventually, all execution paths lead to &lt;code&gt;CreateProcessInternal&lt;/code&gt; which calls &lt;code&gt;NtCreateUserProcess&lt;/code&gt; (part of) which makes the transition to kernel mode and continue the kernel mode part of process creation with the same name. As the name suggests, &lt;code&gt;NtCreateUserProcess&lt;/code&gt; creates a user process. A user cannot create a native process, such as &lt;code&gt;smss.exe&lt;/code&gt; and &lt;code&gt;csrss.exe&lt;/code&gt;, as &lt;code&gt;CreateProcessInternal&lt;/code&gt; function will reject images with native subsystem image type.&lt;/p&gt;
-&lt;p&gt;Apart from NT Processes, the Kernel Executive supports additional processes, that are created bypassing WinAPI, such as Native processes, Minimal or Pico Processes. These would be beyond the scope of this post.&lt;/p&gt;
+&lt;p&gt;All of the above have different use cases but eventually, all execution paths lead to &lt;code&gt;CreateProcessInternal&lt;/code&gt; which calls &lt;code&gt;NtCreateUserProcess&lt;/code&gt; (part of) which makes the transition to kernel mode and continues the kernel mode part of the process creation with the same name. As the name suggests, &lt;code&gt;NtCreateUserProcess&lt;/code&gt; creates a user process. A user cannot create a native process, such as &lt;code&gt;smss.exe&lt;/code&gt; and &lt;code&gt;csrss.exe&lt;/code&gt;, as &lt;code&gt;CreateProcessInternal&lt;/code&gt; function will reject images with native subsystem image type.&lt;/p&gt;
+&lt;p&gt;Apart from NT Processes, the Kernel Executive supports additional processes, that are created bypassing WinAPI, such as Native processes, Minimal, or Pico Processes. These would be beyond the scope of this post.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;You might be following along in a VM. If you are using VMware, you might notice performance slowdowns or hangs, which can get quite frustrating. There is a good way to get more performace!&lt;/p&gt;
+&lt;p&gt;You might be following along in a VM. If you are using VMware, you might notice performance slowdowns or hangs, which can get quite frustrating. There is a good way to get more performance!&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;If you&amp;rsquo;re using VMWare Player, make sure the VM is &amp;ldquo;Shut Down&amp;rdquo; and not &amp;ldquo;Suspended&amp;rdquo;. Then, navigate to the Virtual Machine working directory. Locate the config file &lt;code&gt;.vmx&lt;/code&gt;. Open that in an editor and add the following line to it -&amp;gt; &lt;code&gt;ulm.disableMitigations = &amp;quot;TRUE&amp;quot;&lt;/code&gt;. This will disable side-channel mitigations applied to your VM.&lt;/li&gt;
 &lt;li&gt;If you&amp;rsquo;re using Workstation pro, then you can directly disable side-channel mitigations in &amp;ldquo;Edit Virtual Machine Settings&amp;rdquo;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;threads&#34;&gt;Threads&lt;/h3&gt;
-&lt;p&gt;A thread is a subcomponent of process which does the actual execution. A process contain threads (at a minimum, 1 thread). Threads have their address space isolated from each other and share a common address space of the process. At OS-level, a Windows thread is represented by an executive thread object. This object encapsulates &lt;code&gt;nt!_ETHREAD&lt;/code&gt; (which is also an opaque kernel structure) which contains, among others, &lt;code&gt;nt!_KTHREAD&lt;/code&gt; structure as its first member. &lt;code&gt;nt!_KTHREAD&lt;/code&gt; points to several other structures all of which reside in system address space, with the exception of &lt;strong&gt;Thread Environment Block&lt;/strong&gt; (TEB). TEB, like PEB, resides in userspace.&lt;/p&gt;
-&lt;p&gt;The Windows subsystem process (csrss) maintains a parallel data strucure &lt;code&gt;CSR_THREAD&lt;/code&gt;. For threads that have called a Windows subsystem &lt;code&gt;USER&lt;/code&gt; or &lt;code&gt;GDI&lt;/code&gt; function, kernel-mode portion of Windows Subsystem (&lt;code&gt;Win32k.sys&lt;/code&gt;) maintains a per-thread data structure (&lt;code&gt;W32THREAD&lt;/code&gt;) that the &lt;code&gt;KTHREAD&lt;/code&gt; structure points to.&lt;/p&gt;
-&lt;p&gt;The simplest function to create a thread is &lt;code&gt;CreateThread&lt;/code&gt; function which creates a thread in the current process. On successful completion, a non-zero handle is returned and a unique thread ID if requested by the caller.&lt;/p&gt;
+&lt;p&gt;A thread is a subcomponent of a process that does the actual execution. A process contains threads (at a minimum, 1 thread). Threads have their address space isolated from each other and share a common address space of the process. At OS-level, a Windows thread is represented by an executive thread object. This object encapsulates &lt;code&gt;nt!_ETHREAD&lt;/code&gt; (which is also an opaque kernel structure) which contains, among others, &lt;code&gt;nt!_KTHREAD&lt;/code&gt; structure as its first member. &lt;code&gt;nt!_KTHREAD&lt;/code&gt; points to several other structures all of which reside in system address space, with the exception of &lt;strong&gt;Thread Environment Block&lt;/strong&gt; (TEB). TEB, like PEB, resides in userspace.&lt;/p&gt;
+&lt;p&gt;The Windows subsystem process (csrss) maintains a parallel data structure &lt;code&gt;CSR_THREAD&lt;/code&gt;. For threads that have called a Windows subsystem &lt;code&gt;USER&lt;/code&gt; or &lt;code&gt;GDI&lt;/code&gt; function, the kernel-mode portion of the Windows Subsystem (&lt;code&gt;Win32k.sys&lt;/code&gt;) maintains a per-thread data structure (&lt;code&gt;W32THREAD&lt;/code&gt;) that the &lt;code&gt;KTHREAD&lt;/code&gt; structure points to.&lt;/p&gt;
+&lt;p&gt;The simplest function to create a thread is &lt;code&gt;CreateThread&lt;/code&gt; function which creates a thread in the current process. On successful completion, a non-zero handle is returned, and a unique thread ID if requested by the caller.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;CreateRemoteThread&lt;/code&gt; is used to inject a thread into another process. It can be used by the debugger to force a break in a debugged process. The debugger injects the thread which immediately causes a breakpoint by calling the &lt;code&gt;DebugBreak&lt;/code&gt; function. Another use can be to obtain information about a process when running within the target process context, this can be done for legitimate or malicious purposes.&lt;/p&gt;
 &lt;p&gt;Going back to &lt;code&gt;lkd&lt;/code&gt;, you can use it to examine &lt;code&gt;nt!_ETHREAD&lt;/code&gt; -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; dt nt!_ETHREAD
@@ -291,7 +291,7 @@ Memory read error 0000000000000114
    +0x6c0 LastSoftParkElectionGeneration : Uint8B
    +0x6c8 LastSoftParkElectionGroupAffinity : _GROUP_AFFINITY
    +0x6d8 UpdateTebListEntry : _SINGLE_LIST_ENTRY
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Listed above are the structures inside &lt;code&gt;nt!_ETHREAD&lt;/code&gt; and their types. For instance, &lt;code&gt;Tcb&lt;/code&gt; is of type &lt;code&gt;_KTHREAD&lt;/code&gt; and &lt;code&gt;CreateTime&lt;/code&gt; is an instance of &lt;code&gt;_LARGE_INTEGER&lt;/code&gt; structure.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Listed above are the structures inside &lt;code&gt;nt!_ETHREAD&lt;/code&gt; and their types. For instance, &lt;code&gt;Tcb&lt;/code&gt; is of type &lt;code&gt;_KTHREAD&lt;/code&gt;, and &lt;code&gt;CreateTime&lt;/code&gt; is an instance of &lt;code&gt;_LARGE_INTEGER&lt;/code&gt; structure.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;!thread&lt;/code&gt; can be used to view information about a thread. But this can only be used in kernel-mode debugging.&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !thread
    THREAD ffff830869dec080  Cid 24cc.0250  Teb: 0000003a3cb00000 Win32Thread: ffff83086dfe3da0 WAIT: (WrUserRequest) UserMode Non-Alertable
@@ -325,35 +325,36 @@ Memory read error 0000000000000114
 &lt;p&gt;The 64-bit hexadecimal number after &lt;code&gt;Win32Thread&lt;/code&gt; is the address of Win32Thread.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Apart from these, other fields show stack trace, priority, thread start address, owning process and thread state.&lt;/p&gt;
+&lt;p&gt;Apart from these, other fields show stack trace, priority, thread start address, owning process, and thread state.&lt;/p&gt;
 &lt;h3 id=&#34;virtual-memory&#34;&gt;Virtual Memory&lt;/h3&gt;
-&lt;p&gt;It is what is written on the box, a memory that doesn&amp;rsquo;t really exists (but mapped). When a processor writes to a memory location it actually writes to a virtual address. The essence of virtual memory lies in the fact that, from an execution perspective the CPU doesn&amp;rsquo;t need to know whether the memory is mapped to RAM or Disk.&lt;/p&gt;
-&lt;p&gt;Below is the layout for two &amp;ldquo;extreme&amp;rdquo; cases: 32-bit process on a 32-bit system (left) and a 64-bit process on a 64-bit system (right) -&amp;gt;&lt;/p&gt;
+&lt;p&gt;It is what is written on the box, a memory that doesn&amp;rsquo;t exists (but is mapped). When a processor writes to a memory location it writes to a virtual address. The essence of virtual memory lies in the fact that from an execution perspective, the CPU doesn&amp;rsquo;t need to know whether the memory is mapped to RAM or Disk.&lt;/p&gt;
+&lt;p&gt;Below is the layout for two &amp;ldquo;extreme&amp;rdquo; cases: a 32-bit process on a 32-bit system (left) and a 64-bit process on a 64-bit system (right) -&amp;gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/VMLayout.png&#34; alt=&#34;image&#34;&gt;
-&lt;em&gt;Source: Windows Kernel Programming, 2nd Edition&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;If the requested page doesn&amp;rsquo;t exist in RAM, the CPU raises a page fault exception, which causes the memory manager&amp;rsquo;s page fault exception handler to fetch data from file (if it&amp;rsquo;s a valid page fault), copy it to RAM, update the page table entries and instruct CPU to try again.&lt;/p&gt;
+&lt;em&gt;Virtual Memory Layout in Different Cases, Source: Windows Kernel Programming, 2nd Edition&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;If the requested page doesn&amp;rsquo;t exist in RAM, the CPU raises a page fault exception, which causes the memory manager&amp;rsquo;s page fault exception handler to fetch data from the file (if it&amp;rsquo;s a valid page fault), copy it to RAM, update the page table entries and instruct CPU to try again.&lt;/p&gt;
 &lt;p&gt;Windows also supports large pages, by using &lt;strong&gt;Page Directory Entry&lt;/strong&gt; (PDE) to directly map a large page without using a page table. This makes better use of &lt;strong&gt;Translation Lookaside Buffer&lt;/strong&gt; (TLB) - a cache of recently translated pages maintained by the CPU.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;A non-paged area is a memory region which is guaranteed to remain in memory as it&amp;rsquo;s never paged. But the Windows Bug Check error PAGE_FAULT_IN_NONPAGED_AREA (0x00000050) seemingly contradicts this idea that a page fault cannot happen in a region where the referenced memory is guranteed to be in RAM. Interesting!
-A probable cause for this might be a situation where a driver misuses non-paged pool allocations and/or references invalid memory. Bad driver code or corrupt system memory is the major reason.&lt;/p&gt;
+&lt;p&gt;A non-paged area is a memory region that is guaranteed to remain in memory as it&amp;rsquo;s never paged. But the Windows Bug Check error &lt;code&gt;PAGE_FAULT_IN_NONPAGED_AREA&lt;/code&gt; (&lt;code&gt;0x00000050&lt;/code&gt;) seemingly contradicts this idea that a page fault cannot happen in a region where the referenced memory is guaranteed to be in RAM. Interesting!
+A probable cause for this might be a situation where a driver misuses non-paged pool allocations and/or references invalid memory. Bad driver code or corrupt system memory is the major reason almost all the time.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;mode-of-execution&#34;&gt;Mode of Execution&lt;/h3&gt;
-&lt;p&gt;This refers to the nature of code being executed. Does that belongs to a user application or a part of a kernel component? The nature of code determines the privilege assigned to it. To support this structure, x64 processors are divided into privilege rings -&amp;gt; Ring 3 to Ring 0.&lt;/p&gt;
+&lt;p&gt;This refers to the nature of the code being executed. Does that belong to a user application or a part of a kernel component? The nature of code determines the privilege assigned to it. To support this structure, x64 processors are divided into privilege levels/rings -&amp;gt; Ring 3 to Ring 0. The purpose is to differentiate system and user data, and to protect it from inadvertent/malicious access or writes.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Actually, these rings go even deeper in modern Intel/AMD Processors -&amp;gt;&lt;/p&gt;
+&lt;p&gt;These rings go even deeper in modern Intel/AMD Processors -&amp;gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Ring -1 : Hypervisor&lt;/li&gt;
-&lt;li&gt;Ring -2 : System Management Mode&lt;/li&gt;
-&lt;li&gt;Ring -3 : Intel Management Engine (ME)
-Below these exists the Microcode and the actual Silicon.&lt;/li&gt;
+&lt;li&gt;Ring -1: Hypervisor&lt;/li&gt;
+&lt;li&gt;Ring -2: System Management Mode (SMM)&lt;/li&gt;
+&lt;li&gt;Ring -3: Intel Management Engine (ME). With a special emphasis, this sub-component is downright dystopian. To understand why, I highly encourage you go to through the post -&amp;gt; &lt;a href=&#34;https://medium.com/swlh/negative-rings-in-intel-architecture-the-security-threats-youve-probably-never-heard-of-d725a4b6f831&#34;&gt;Negative Rings in Intel Architecture: The Security Threats That You’ve Probably Never Heard Of&lt;/a&gt; on Medium by &lt;a href=&#34;https://medium.com/@RealWorldCyberSecurity&#34;&gt;RealWorldCyberSecurity&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;Below these exist the Microcode (which is a layer between CPU hardware and programmer visible ISA) and the actual Silicon.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&amp;rsquo;t affect other processes, they keep running.&lt;/p&gt;
+&lt;p&gt;When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). Each page in Virtual Memory is tagged to indicate what access mode the processor must be in to read/or write the page. A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&amp;rsquo;t affect other processes, they keep running.&lt;/p&gt;
 &lt;p&gt;A kernel mode component, such as a Kernel-Mode driver, shares its address space with the whole kernel. This implies if a component crashes it takes the whole system with it. The kernel, &lt;strong&gt;Hardware Abstraction Layer&lt;/strong&gt; (HAL), and kernel drivers operate in kernel space.&lt;/p&gt;
+&lt;h4 id=&#34;a-short-detour-intel-me&#34;&gt;A short Detour: Intel ME&lt;/h4&gt;
 &lt;h3 id=&#34;system-services&#34;&gt;System Services&lt;/h3&gt;
-&lt;p&gt;Or System Calls are used to request kernel services like reading from file, thread creation etc. System calls in Windows follows a rather complex path as compared to Unix syscalls. Under Windows, user applications don&amp;rsquo;t call the native Windows OS services directly. Rather, they go through one or more subsystem Dynamic-Link Libraries (DLLs).&lt;/p&gt;
+&lt;p&gt;Or System Calls are used to request kernel services like reading from the file, thread creation, etc. System calls in Windows follow a rather complex path as compared to Unix syscalls. Under Windows, user applications don&amp;rsquo;t call the native Windows OS services directly. Rather, they go through one or more subsystem Dynamic-Link Libraries (DLLs).&lt;/p&gt;
 &lt;p&gt;Take file creation for example.&lt;/p&gt;
-&lt;p&gt;When a user creates a new file in &lt;em&gt;Notepad&lt;/em&gt;, its code calls &lt;code&gt;CreateFile&lt;/code&gt;, which is documented, and implemented in &lt;code&gt;kernel32.dll&lt;/code&gt;. This function runs in user mode, so there is no way it can open a file. After some error checking, it calls &lt;code&gt;NtCreateFile&lt;/code&gt;, a function implemented in &lt;code&gt;ntdll.dll&lt;/code&gt;. It is documented and is the one that makes the actual transition to kernel-mode. Before the transition, it puts a number called &lt;strong&gt;System Service Number&lt;/strong&gt;, into a CPU register (&lt;code&gt;EAX&lt;/code&gt; on Intel/AMD architectures). Then it issues a special CPU instruction (&lt;code&gt;syscallon&lt;/code&gt; on x64 or &lt;code&gt;sysenter&lt;/code&gt; on x86) that makes the actual transistion to kernel-mode while jumping to a predefined routine called the &lt;strong&gt;System Service Dispatcher&lt;/strong&gt; (SSD). The SSD, in turn, uses the value in the &lt;code&gt;EAX&lt;/code&gt; register as an index into a &lt;strong&gt;System Service Dispatch Table&lt;/strong&gt; (SSDT). Using this table, the code jumps to the system service (call) itself. For the &lt;em&gt;Notepad&lt;/em&gt; example, the SSDT entry would point to &lt;code&gt;NtCreateFile&lt;/code&gt;, implemented by kernel I/O manager.&lt;/p&gt;
+&lt;p&gt;When a user creates a new file in &lt;em&gt;Notepad&lt;/em&gt;, its code calls &lt;code&gt;CreateFile&lt;/code&gt;, which is documented, and implemented in &lt;code&gt;kernel32.dll&lt;/code&gt;. This function runs in user mode, so there is no way it can open a file. After some error checking, it calls &lt;code&gt;NtCreateFile&lt;/code&gt;, a function implemented in &lt;code&gt;ntdll.dll&lt;/code&gt;. It is documented and is the one that makes the actual transition to kernel mode. Before the transition, it puts a number called &lt;strong&gt;System Service Number&lt;/strong&gt;, into a CPU register (&lt;code&gt;EAX&lt;/code&gt; on Intel/AMD architectures). Then it issues a special CPU instruction (&lt;code&gt;syscallon&lt;/code&gt; on x64 or &lt;code&gt;sysenter&lt;/code&gt; on x86) that makes the actual transition to kernel mode while jumping to a predefined routine called the &lt;strong&gt;System Service Dispatcher&lt;/strong&gt; (SSD). The SSD, in turn, uses the value in the &lt;code&gt;EAX&lt;/code&gt; register as an index into a &lt;strong&gt;System Service Dispatch Table&lt;/strong&gt; (SSDT). Using this table, the code jumps to the system service (call) itself. For the &lt;em&gt;Notepad&lt;/em&gt; example, the SSDT entry would point to &lt;code&gt;NtCreateFile&lt;/code&gt;, implemented by the kernel I/O manager.&lt;/p&gt;
 &lt;p&gt;This can be seen in action. Open &lt;em&gt;Notepad.exe&lt;/em&gt; in &amp;lsquo;WinDbg Preview&amp;rsquo;. Upon attaching to the process, the debugger will hit a default breakpoint -&amp;gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;(6b4.840): Break instruction exception - code 80000003 (first chance)
 ntdll!LdrpDoDebuggerBreak+0x30:
@@ -374,14 +375,26 @@ ntdll!LdrpDoDebuggerBreak+0x30:
    00007ff8`fac50334 c3              ret
    00007ff8`fac50335 cd2e            int     2Eh
    00007ff8`fac50337 c3              ret
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As mentioned above, &lt;code&gt;EAX&lt;/code&gt; is set with SSN -&amp;gt; 0x55. This is the system call number. Then notice the &lt;code&gt;syscall&lt;/code&gt; instruction. This switches the processor to kernel-mode, jumping to the SSDT entry corresponding to the value inside &lt;code&gt;EAX&lt;/code&gt;. Predictably, 0x55 corresponds to &lt;code&gt;NtCreateFile&lt;/code&gt;. Notice the flag value set to 1 at offset 0x308 to &lt;code&gt;SharedUserData&lt;/code&gt;. If this flag is set, the execution will take another path using the &lt;code&gt;int 2Eh&lt;/code&gt; instruction on the second to last line of the output above. This flag corresponds to a specific Credential Guard VBS (Virtualization Based Security) feature as the hypervisor can better react to &lt;code&gt;int&lt;/code&gt; instruction rather than &lt;code&gt;syscall&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Alright! Enough for this one!&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As mentioned above, &lt;code&gt;EAX&lt;/code&gt; is set with SSN -&amp;gt; 0x55. This is the system call number. Then notice the &lt;code&gt;syscall&lt;/code&gt; instruction. This switches the processor to kernel mode, jumping to the SSDT entry corresponding to the value inside &lt;code&gt;EAX&lt;/code&gt;. Predictably, 0x55 corresponds to &lt;code&gt;NtCreateFile&lt;/code&gt;. Notice the flag value set to 1 at offset 0x308 to &lt;code&gt;SharedUserData&lt;/code&gt;. If this flag is set, the execution will take another path using the &lt;code&gt;int 2Eh&lt;/code&gt; instruction on the second to last line of the output above. This flag corresponds to a specific Credential Guard VBS (Virtualization Based Security) feature as the hypervisor can better react to &lt;code&gt;int&lt;/code&gt; instruction rather than &lt;code&gt;syscall&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;All right! Enough for this one!&lt;/p&gt;
 &lt;h3 id=&#34;objects-and-handles&#34;&gt;Objects and Handles&lt;/h3&gt;
-&lt;p&gt;In Windows, an object is a single, runtime instance of a statically defined object. They are kernel data structures representing commonly used facilities like files, registry keys, processes, threads, devices etc. that are managed by the Object Manager, a component of the Windows Kernel.&lt;/p&gt;
-&lt;p&gt;Windows has three primary types of objects: Executive Objects, Kernel Objects, and GDI/User Objects. Executive objects are&lt;/p&gt;
-&lt;p&gt;All such objects are preceded by an &lt;code&gt;nt!_OBJECT_HEADER&lt;/code&gt; structure that contains information about the object and is used to manage the life cycle of the object, allow the object to be uniquely named, secure the object by applying access control, invoke object type specific methods and track the allocator&amp;rsquo;s quota usage.&lt;/p&gt;
-&lt;p&gt;Handles are references returned to caller by the callee (APIs in this case) which are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. &lt;code&gt;nt!_HANDLE_TABLE_ENTRY&lt;/code&gt; represents an individual entry in the process&amp;rsquo; handle table. Handle tables are allocated from Paged Pool. When a process terminates the function &lt;code&gt;ExSweepHandleTable()&lt;/code&gt; closes all handles in the handle table of that process.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;!handle&lt;/code&gt; can be used to examine the handle table of currently running process. Output would be very large! Hence, `&lt;/p&gt;
+&lt;p&gt;In Windows, an object is a single, runtime instance of a statically defined object. They are kernel data structures representing commonly used facilities like files, registry keys, processes, threads, devices, etc. that are managed by the Object Manager, a component of the Windows Kernel. Not all objects have names, for eg., processes and threads don&amp;rsquo;t have names - they have IDs. That’s why the &lt;code&gt;OpenProcess()&lt;/code&gt; and &lt;code&gt;OpenThread()&lt;/code&gt; functions require a process/thread identifier (a number) rather than a string-base name.&lt;/p&gt;
+&lt;p&gt;Windows has three primary types of objects: Executive Objects, Kernel Objects, and GDI/User Objects.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/ObjectCat.png&#34; alt=&#34;a&#34;&gt;
+&lt;em&gt;Object categorization, Source: Windows Internals: Part 1&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Executive objects are implemented by various components of the executive (such as process manager, memory manager, and I/O subsystem).&lt;/li&gt;
+&lt;li&gt;Kernel objects are a more primitive set of objects implemented by the Windows kernel. These objects are not visible to user-mode code but are created and used only within the executive.&lt;/li&gt;
+&lt;li&gt;Majority of GDI/User objects belong to the Windows subsystem (Win32k.sys) and do not interact with the kernel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;WinObj tool from Sysinternals displays all objects in the system.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/WinObj.png&#34; alt=&#34;WinObj&#34;&gt;
+&lt;em&gt;All &lt;code&gt;GLOBAL$$&lt;/code&gt; objects as viewed in WinObj&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;All such objects are preceded by an &lt;code&gt;nt!_OBJECT_HEADER&lt;/code&gt; structure that contains information about the object and is used to manage the life cycle of the object, allow it to be uniquely named, and secure it by applying access control, invoke the object type-specific methods and track the allocator&amp;rsquo;s quota usage.&lt;/p&gt;
+&lt;p&gt;Handles are references returned to the caller by the callee (APIs in this case) that are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. Handles are always a multiple of 4, and 0 is never a valid handle value.&lt;/p&gt;
+&lt;p&gt;The kernel (and driver) code can either work with a handle or pointer to an object. Handles can be converted to points using &lt;code&gt;ObDereferenceObjectByHandle()&lt;/code&gt; and &lt;code&gt;ObReferenceObjectByHandle()&lt;/code&gt; functions. The former function returns a pointer to the object and the latter function increments the reference count of the object. The reference count is decremented when the object is no longer needed. The object is freed when the reference count reaches 0. Object manager destroys the object if its reference count reaches 0.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;nt!_HANDLE_TABLE_ENTRY&lt;/code&gt; represents an individual entry in the process handle table. Handle tables are allocated from Paged Pool. When a process terminates the function &lt;code&gt;ExSweepHandleTable()&lt;/code&gt; closes all handles in the handle table of that process.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;!handle&lt;/code&gt; can be used to examine the handle table of the currently running process. The output would be huge!&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-dbgcmd&#34; data-lang=&#34;dbgcmd&#34;&gt;lkd&amp;gt; !handle
 
 PROCESS ffff9f016a6e4080
@@ -405,31 +418,32 @@ Object: ffff9f016aef1be0  Type: (ffff9f01638b30c0) Event
 Object: ffff9f016abbeee0  Type: (ffff9f01638c2380) WaitCompletionPacket
     ObjectHeader: ffff9f016abbeeb0 (new version)
         HandleCount: 1  PointerCount: 32755
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output displays the handle table of current process and properties of individual handles, including a total of 758 entries. The &lt;code&gt;HandleCount&lt;/code&gt; field shows 754 entries, but the OS allocates additional handles for improved performance, resulting in 758 entries in the table.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output displays the handle table of the current process and properties of individual handles, including a total of 758 entries. The &lt;code&gt;HandleCount&lt;/code&gt; field shows 754 entries, but the OS allocates additional handles for improved performance, resulting in 758 entries in the table.&lt;/p&gt;
 &lt;h3 id=&#34;subsystems-subsystem-dlls-and-ntdlldll&#34;&gt;Subsystems, Subsystem DLLs and ntdll.dll&lt;/h3&gt;
 &lt;p&gt;A subsystem is a facility by which Windows exposes some subset of the base Windows executive system services to application programs.&lt;/p&gt;
 &lt;p&gt;This means that some things that can be done from an application built on one subsystem can&amp;rsquo;t be done by another application built on another subsystem. Each executable image &lt;code&gt;.exe&lt;/code&gt; is bound to only one subsystem. Subsystems are started by the Session Manager (Smss.exe) process. Subsystem startup information is stored under the registry key &lt;code&gt;HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\SubSystems&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;During process creation, the process creation code examines the sub-system type header code and notify the target subsystem of the new process. This type code is defined in the &lt;code&gt;/SUBSYSTEM&lt;/code&gt; linker flag of Visual Studio Linker.&lt;/p&gt;
-&lt;p&gt;You can view the image subsystem type using the Dependency Walker (depends.exe). If you check &lt;em&gt;notepad.exe&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34; alt=&#34;depends&#34;&gt;&lt;/p&gt;
+&lt;p&gt;During process creation, the process creation code examines the sub-system type header code and notifies the target subsystem of the new process. This type of code is defined in the &lt;code&gt;/SUBSYSTEM&lt;/code&gt; linker flag of Visual Studio Linker.&lt;/p&gt;
+&lt;p&gt;You can view the image subsystem type using the Dependency Walker (depends.exe). If you check &lt;em&gt;notepad.exe&lt;/em&gt; -&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34; alt=&#34;depends&#34;&gt;
+&lt;em&gt;Dependency Listing of Notepad.exe in depends.exe&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The role of subsystem DLLs is to translate a documented function into the appropriate internal (and generally undocumented) native system service calls implemented mostly in &lt;code&gt;NTDLL.DLL&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;NTDLL.DLL&lt;/code&gt; comprises the lowest layer of code that still runs in user mode. It acts a special support library primarily for the use of subsystem DLLs and native applications. Native images are those images that are not tied to any particular subsystem.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;NTDLL.DLL&lt;/code&gt; comprises the lowest layer of code that still runs in user mode. It acts as a special support library primarily for the use of subsystem DLLs and native applications. Native images are those images that are not tied to any particular subsystem.&lt;/p&gt;
 &lt;h3 id=&#34;hardware-abstraction-layer-hal&#34;&gt;Hardware Abstraction Layer (HAL)&lt;/h3&gt;
 &lt;p&gt;The HAL is a loadable kernel-mode module (Hal.dll) that provides the low-level interface to the hardware platform on which Windows is running. This is a layer of code that isolates the kernel, the device drivers, and the rest of the Windows Executive from platform-specific hardware differences.&lt;/p&gt;
 &lt;p&gt;It hides hardware-dependent details such as I/O interfaces, interrupt controllers, and multiprocessor communication mechanisms — any functions that are both architecture-specific and machine-dependent. So rather than access hardware directly, Windows internal components and user-written device
 drivers maintain portability by calling the HAL routines when they need platform-dependent information. For this reason, many HAL routines are documented in the WDK.&lt;/p&gt;
 &lt;h3 id=&#34;hyper-v-hypervisor-and-driver-code-security-challenges&#34;&gt;Hyper-V Hypervisor and Driver Code Security Challenges&lt;/h3&gt;
-&lt;p&gt;This contains the hypervisor. There are no drivers or other modules in this environment. That being said, the hypervisor itself is composed of multiple internal layers and services, such as its own Memory Manager, Virtual Processor scheduler, Interrupt and Time management, Synchronization Routines, Partitions (VM instances) management and Inter-Partition Communication (IPC) and more. This is one level below Ring 0 privilege, Ring -1.&lt;/p&gt;
-&lt;p&gt;One of the main roles of Hyper-V in Windows 10 and Windows Server 2016 (and later) to enable support for Virtualization Based Security (VBS).&lt;/p&gt;
-&lt;p&gt;VBS provides an extra layer of security as the normal OS exists as a Hyper-V VM. Windows uses Virtual Trust Levels (VTLs), which uses the hypervisor to configure virtual trust levels. This is to address challenges arising from malicious driver code which could access kernel-mode memory.&lt;/p&gt;
+&lt;p&gt;This contains the hypervisor. There are no drivers or other modules in this environment. That being said, the hypervisor itself is composed of multiple internal layers and services, such as its own Memory Manager, Virtual Processor scheduler, Interrupt and Time management, Synchronization Routines, Partitions (VM instances) management, and Inter-Partition Communication (IPC), and more. This is one level below Ring 0 privilege, Ring -1.&lt;/p&gt;
+&lt;p&gt;One of the main roles of Hyper-V in Windows 10 and Windows Server 2016 (and later) is to enable support for Virtualization Based Security (VBS).&lt;/p&gt;
+&lt;p&gt;VBS provides an extra layer of security as the normal OS exists as a Hyper-V VM. Windows uses Virtual Trust Levels (VTLs), which use the hypervisor to configure virtual trust levels. This is to address challenges arising from malicious driver code which could access kernel-mode memory.&lt;/p&gt;
 &lt;p&gt;VBS provides extra security on top of processor isolation.&lt;/p&gt;
-&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
-&lt;p&gt;In this post you learnt about Windows Processes, Threads, and System Services and other specific topics like Virtual Memory, Objects and Handles.&lt;/p&gt;
-&lt;p&gt;In the next post, you&amp;rsquo;ll start building your first driver.&lt;/p&gt;
+&lt;h3 id=&#34;conclusion-and-credits&#34;&gt;Conclusion and Credits&lt;/h3&gt;
+&lt;p&gt;In this post, you learned about Windows Processes, Threads, System Services, and other specific topics like Virtual Memory, Objects, and Handles.&lt;/p&gt;
+&lt;p&gt;In the next post, you&amp;rsquo;ll start building your first driver. All the subsequent posts will lay more emphasis on the driver development process and would be code intensive.&lt;/p&gt;
 &lt;p&gt;Stay Tuned!&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;This post draws inspiration from &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt;, if you wish to dive even deeper (The book, for instance, explains Session Manager, &lt;code&gt;smss.exe&lt;/code&gt; in 38 points!), &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt;, the official &lt;a href=&#34;https://learn.microsoft.com/en-us/windows/&#34;&gt;Microsoft documentation&lt;/a&gt; and &lt;strong&gt;my own experimentation&lt;/strong&gt;. Also, if you wish to dive deeper into Windows Internals for security research, I would highly recommend &lt;a href=&#34;https://codemachine.com/index.html&#34;&gt;CodeMachine&lt;/a&gt;, they provide training for all things &amp;ldquo;Windows Security&amp;rdquo;. Some of their articles have also inspired this post.&lt;/p&gt;
+&lt;p&gt;This post draws inspiration from &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt;, if you wish to dive even deeper (The book, for instance, explains Session Manager, &lt;code&gt;smss.exe&lt;/code&gt; in 38 points!), &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt;, the official &lt;a href=&#34;https://learn.microsoft.com/en-us/windows/&#34;&gt;Microsoft documentation&lt;/a&gt; and &lt;strong&gt;my experimentation&lt;/strong&gt;. Also, if you wish to dive deeper into Windows Internals for security research, I would highly recommend &lt;a href=&#34;https://codemachine.com/index.html&#34;&gt;CodeMachine&lt;/a&gt;, they provide training for all things &amp;ldquo;Windows Security&amp;rdquo;. Some of their articles have also inspired this post.&lt;/p&gt;
 &lt;/blockquote&gt;
 </content>
     </item>
@@ -444,7 +458,7 @@ drivers maintain portability by calling the HAL routines when they need platform
 This is the first part in the series, &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
 This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&amp;rsquo; system/VM if you messed up.
 A basic DriverEntry routine definition looks something like this -&amp;gt;
-NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) { UNREFERENCED_PARAMETER (DriverObject); UNREFERNECED_PARAMETER (RegistryPath); return STATUS_SUCCESS; } While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.</description>
+NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) { UNREFERENCED_PARAMETER (DriverObject); UNREFERNECED_PARAMETER (RegistryPath); return STATUS_SUCCESS; } While this may look intimidating at first, brushing up on OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;This is the first part in the series, &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;This series will help you understand and write KMDF drivers, and maybe exploit them in red team engagements or DoS your own/or others&amp;rsquo; system/VM if you messed up.&lt;/p&gt;
@@ -454,44 +468,44 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    UNREFERNECED_PARAMETER (RegistryPath);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; STATUS_SUCCESS;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this may look intimidating at first, brushing up on OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&amp;rsquo;s about to come.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;For further details I recommend &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt; by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt; by Pavel Yosifovich.&lt;/p&gt;
+&lt;p&gt;For further details, I recommend &lt;a href=&#34;https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188&#34;&gt;Windows Internals&lt;/a&gt; by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and &lt;a href=&#34;https://leanpub.com/windowskernelprogrammingsecondedition&#34;&gt;Windows Kernel Programming&lt;/a&gt; by Pavel Yosifovich. This post and the upcoming ones took inspiration from their work.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;By the way, &lt;code&gt;DriverEntry&lt;/code&gt; is just the &lt;code&gt;main&lt;/code&gt; of the driver.&lt;/p&gt;
 &lt;h3 id=&#34;drivers-who-dis&#34;&gt;Drivers&amp;hellip; Who dis?&lt;/h3&gt;
-&lt;p&gt;Drivers are Structured, High Privilege Deployable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.&lt;/p&gt;
+&lt;p&gt;Drivers are Structured, High Privilege Deployable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as the kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.&lt;/p&gt;
 &lt;p&gt;Drivers provide a way to interact with (in most cases) hardware devices. These are called Hardware Drivers. On the contrary, software components that execute kernel-level privilege tasks such as file creation, are classified under Software Drivers.&lt;/p&gt;
 &lt;p&gt;To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&amp;gt; Windows Driver Model (WDM) and Windows Driver Foundation (WDF).&lt;/p&gt;
 &lt;h3 id=&#34;wdm-vs-wdf&#34;&gt;WDM vs WDF&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;Simply put, WDM is older, more-complex-to-work-with framework to write drivers. Ideal for writing File Systems or File System Filter drivers, WDM provides greater control over kernel objects and is hard to write, debug, and maintain.&lt;/p&gt;
-&lt;p&gt;WDM objects are system-wide objects accessible to drivers and are referenced by pointers. A driver that corrupts a WDM object corrupts the entire system. WDM drivers are trusted kernel components, hence OS does less checks to validate data.&lt;/p&gt;
+&lt;p&gt;Simply put, WDM is an older, more complex-to-work-with framework to write drivers. Ideal for writing File Systems or File System Filter drivers, WDM provides greater control over kernel objects and is hard to write, debug, and maintain.&lt;/p&gt;
+&lt;p&gt;WDM objects are system-wide objects accessible to drivers and are referenced by pointers. A driver that corrupts a WDM object corrupts the entire system. WDM drivers are trusted kernel components, hence OS does fewer checks to validate data.&lt;/p&gt;
 &lt;p&gt;From a security perspective, leveraging a framework that provides higher control than WDF, would enable more stealth during offensive engagements.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;WDF is a new, easier-to-work-with framework that abstracts a lot details of WDM. It supports a coherent object model in which objects are invisible to drivers.&lt;/p&gt;
-&lt;p&gt;Corrupting a WDF Driver is not only more difficult - as the framework evalutates data being supplied - but also causes system wide problems less often.&lt;/p&gt;
-&lt;p&gt;Apart from these, there many more subtle differences such as how both handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes where in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM and then invoke driver&amp;rsquo;s event callback functions.&lt;/p&gt;
-&lt;p&gt;Event callback functions do a more specific task than general I/O dispatch routines of WDM.&lt;/p&gt;
+&lt;p&gt;WDF is a new, easier-to-work-with framework that abstracts a lot of details of WDM. It supports a coherent object model in which objects are invisible to drivers.&lt;/p&gt;
+&lt;p&gt;Corrupting a WDF Driver is not only more difficult - as the framework evaluates data being supplied - but also causes system-wide problems less often.&lt;/p&gt;
+&lt;p&gt;Apart from these, there are many more subtle differences such as how both handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes whereas, in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM, and then invokes the driver&amp;rsquo;s event callback functions.&lt;/p&gt;
+&lt;p&gt;Event callback functions do a more specific task than the general I/O dispatch routines of WDM.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Regardless of details, the bottom-line is, WDM is complex and much harder to work with while WDF is easier to understand, tradeoff being the abstraction.&lt;/p&gt;
+&lt;p&gt;Regardless of details, the bottom line is, WDM is complex and much harder to work with while WDF is easier to understand, the tradeoff being the abstraction.&lt;/p&gt;
 &lt;h3 id=&#34;requirements&#34;&gt;Requirements&lt;/h3&gt;
 &lt;p&gt;There are some tools and methodologies that are recommended while working with drivers.&lt;/p&gt;
-&lt;p&gt;To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing). You can find them &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk&#34;&gt;here&lt;/a&gt; and Visual Studio &lt;a href=&#34;https://visualstudio.microsoft.com/downloads/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To build and deploy drivers you require the Windows Software Development Kit (SDK), Windows Driver Kit (WDK), and Visual Studio 2022 (the latest as of this writing). You can find them &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk&#34;&gt;here&lt;/a&gt; and Visual Studio &lt;a href=&#34;https://visualstudio.microsoft.com/downloads/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Make sure SDK and WDK versions match, this is important.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Additionally, you&amp;rsquo;d require a Visual Studio extension, &amp;ldquo;Windows Driver Kit&amp;rdquo;. That should be automatically installed if WDK is configured correctly.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;To test drivers, you&amp;rsquo;ll need a &lt;a href=&#34;https://www.microsoft.com/software-download/windows11&#34;&gt;Windows&lt;/a&gt; Virtual Machine, with Windows SDK and WDK installed.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite&#34;&gt;SysInternals Tools&lt;/a&gt; are a must.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite&#34;&gt;SysInternals Tools&lt;/a&gt; is a must.&lt;/p&gt;
 &lt;h3 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h3&gt;
-&lt;p&gt;Driver Development is not something you do regularly, unless you have to.&lt;/p&gt;
-&lt;p&gt;The purpose is to understand Windows internals and drivers in order to build anything from Anti-Virus Filter Driver to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
-&lt;p&gt;In Part 2, you&amp;rsquo;ll learn Advanced Windows Internals concepts required to get started with drivers.&lt;/p&gt;
+&lt;p&gt;Driver Development is not something you do regularly unless you have to.&lt;/p&gt;
+&lt;p&gt;The purpose is to understand Windows internals and drivers to build anything from Anti-Virus Filter Drivers to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
+&lt;p&gt;In Part 2, you&amp;rsquo;ll learn the Advanced Windows Internals concepts required to get started with drivers.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 </content>

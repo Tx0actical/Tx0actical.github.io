@@ -141,7 +141,7 @@
       <span class="post-author">Tx0actical</span>
     
     
-      <span class="post-reading-time">:: 4 min read (680 words)</span>
+      <span class="post-reading-time">:: 4 min read (701 words)</span>
     
   </div>
 
@@ -169,44 +169,44 @@
 </span></span><span style="display:flex;"><span>    UNREFERNECED_PARAMETER (RegistryPath);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> STATUS_SUCCESS;
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>While this may look intimidating at first, brushing up OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&rsquo;s about to come.</p>
+</span></span></code></pre></div><p>While this may look intimidating at first, brushing up on OS Concepts, Windows Internals, C/C++ knowledge, and some persistence will help you better understand stuff that&rsquo;s about to come.</p>
 <p>We&rsquo;ll be dealing mostly with Kernel-Mode or KMDF drivers (explained later), so unless explicitly stated, a driver means a KMDF driver.</p>
 <blockquote>
-<p>For further details I recommend <a href="https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188">Windows Internals</a> by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and <a href="https://leanpub.com/windowskernelprogrammingsecondedition">Windows Kernel Programming</a> by Pavel Yosifovich.</p>
+<p>For further details, I recommend <a href="https://www.microsoftpressstore.com/store/windows-internals-part-1-system-architecture-processes-9780735684188">Windows Internals</a> by Pavel Yosifovich, Alex Ionescu, Mark E. Russinovich, David A. Solomon and <a href="https://leanpub.com/windowskernelprogrammingsecondedition">Windows Kernel Programming</a> by Pavel Yosifovich. This post and the upcoming ones took inspiration from their work.</p>
 </blockquote>
 <p>By the way, <code>DriverEntry</code> is just the <code>main</code> of the driver.</p>
 <h3 id="drivers-who-dis">Drivers&hellip; Who dis?<a href="#drivers-who-dis" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Drivers are Structured, High Privilege Deployable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.</p>
+<p>Drivers are Structured, High Privilege Deployable Kernel modules operating in Ring 0 processor privilege level (only kernel-mode drivers), same as the kernel. Initially, Ring 1 and Ring 2 were reserved for drivers but nobody uses them anymore.</p>
 <p>Drivers provide a way to interact with (in most cases) hardware devices. These are called Hardware Drivers. On the contrary, software components that execute kernel-level privilege tasks such as file creation, are classified under Software Drivers.</p>
 <p>To write drivers, you need to follow a set of guidelines, conventions, and structures, all these together combine to form a Driver Framework. Two of these exist -&gt; Windows Driver Model (WDM) and Windows Driver Foundation (WDF).</p>
 <h3 id="wdm-vs-wdf">WDM vs WDF<a href="#wdm-vs-wdf" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <ul>
 <li>
-<p>Simply put, WDM is older, more-complex-to-work-with framework to write drivers. Ideal for writing File Systems or File System Filter drivers, WDM provides greater control over kernel objects and is hard to write, debug, and maintain.</p>
-<p>WDM objects are system-wide objects accessible to drivers and are referenced by pointers. A driver that corrupts a WDM object corrupts the entire system. WDM drivers are trusted kernel components, hence OS does less checks to validate data.</p>
+<p>Simply put, WDM is an older, more complex-to-work-with framework to write drivers. Ideal for writing File Systems or File System Filter drivers, WDM provides greater control over kernel objects and is hard to write, debug, and maintain.</p>
+<p>WDM objects are system-wide objects accessible to drivers and are referenced by pointers. A driver that corrupts a WDM object corrupts the entire system. WDM drivers are trusted kernel components, hence OS does fewer checks to validate data.</p>
 <p>From a security perspective, leveraging a framework that provides higher control than WDF, would enable more stealth during offensive engagements.</p>
 </li>
 <li>
-<p>WDF is a new, easier-to-work-with framework that abstracts a lot details of WDM. It supports a coherent object model in which objects are invisible to drivers.</p>
-<p>Corrupting a WDF Driver is not only more difficult - as the framework evalutates data being supplied - but also causes system wide problems less often.</p>
-<p>Apart from these, there many more subtle differences such as how both handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes where in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM and then invoke driver&rsquo;s event callback functions.</p>
-<p>Event callback functions do a more specific task than general I/O dispatch routines of WDM.</p>
+<p>WDF is a new, easier-to-work-with framework that abstracts a lot of details of WDM. It supports a coherent object model in which objects are invisible to drivers.</p>
+<p>Corrupting a WDF Driver is not only more difficult - as the framework evaluates data being supplied - but also causes system-wide problems less often.</p>
+<p>Apart from these, there are many more subtle differences such as how both handle I/O requests. For eg. In a WDM driver, I/O dispatch routines map to particular IRP codes whereas, in a WDF driver, the framework registers its own dispatch routines, follows some identical steps to WDM, and then invokes the driver&rsquo;s event callback functions.</p>
+<p>Event callback functions do a more specific task than the general I/O dispatch routines of WDM.</p>
 </li>
 </ul>
-<p>Regardless of details, the bottom-line is, WDM is complex and much harder to work with while WDF is easier to understand, tradeoff being the abstraction.</p>
+<p>Regardless of details, the bottom line is, WDM is complex and much harder to work with while WDF is easier to understand, the tradeoff being the abstraction.</p>
 <h3 id="requirements">Requirements<a href="#requirements" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>There are some tools and methodologies that are recommended while working with drivers.</p>
-<p>To build and deploy drivers you require Windows Software Development Kit (SDK), Windows Driver Kit (WDK) and Visual Studio 2022 (latest as of this writing). You can find them <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">here</a> and Visual Studio <a href="https://visualstudio.microsoft.com/downloads/">here</a>.</p>
+<p>To build and deploy drivers you require the Windows Software Development Kit (SDK), Windows Driver Kit (WDK), and Visual Studio 2022 (the latest as of this writing). You can find them <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">here</a> and Visual Studio <a href="https://visualstudio.microsoft.com/downloads/">here</a>.</p>
 <p>Make sure SDK and WDK versions match, this is important.</p>
 <blockquote>
 <p>Additionally, you&rsquo;d require a Visual Studio extension, &ldquo;Windows Driver Kit&rdquo;. That should be automatically installed if WDK is configured correctly.</p>
 </blockquote>
 <p>To test drivers, you&rsquo;ll need a <a href="https://www.microsoft.com/software-download/windows11">Windows</a> Virtual Machine, with Windows SDK and WDK installed.</p>
-<p><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite">SysInternals Tools</a> are a must.</p>
+<p><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite">SysInternals Tools</a> is a must.</p>
 <h3 id="final-thoughts">Final Thoughts<a href="#final-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Driver Development is not something you do regularly, unless you have to.</p>
-<p>The purpose is to understand Windows internals and drivers in order to build anything from Anti-Virus Filter Driver to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.</p>
-<p>In Part 2, you&rsquo;ll learn Advanced Windows Internals concepts required to get started with drivers.</p>
+<p>Driver Development is not something you do regularly unless you have to.</p>
+<p>The purpose is to understand Windows internals and drivers to build anything from Anti-Virus Filter Drivers to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.</p>
+<p>In Part 2, you&rsquo;ll learn the Advanced Windows Internals concepts required to get started with drivers.</p>
 <p>Stay Tuned.</p>
 <p>Tx0actical. Out.</p>
 
