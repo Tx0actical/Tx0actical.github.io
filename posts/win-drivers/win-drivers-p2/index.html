@@ -139,7 +139,7 @@
       <span class="post-author">Tx0actical</span>
     
     
-      <span class="post-reading-time">:: 22 min read (4552 words)</span>
+      <span class="post-reading-time">:: 22 min read (4561 words)</span>
     
   </div>
 
@@ -176,7 +176,7 @@
 </span></span><span style="display:flex;"><span>   ... <span style="color:#75715e">// Opaque
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span>} EPROCESS, <span style="color:#f92672">*</span>PEPROCESS;
-</span></span></code></pre></div><p><code>nt!_EPROCESS</code> and its constituent data structures are contained in the System address space and can be examined from kernel-mode, except for <strong>Process Control Block</strong> (PCB) which exists in User space.</p>
+</span></span></code></pre></div><p><code>nt!_EPROCESS</code> and its constituent data structures are contained in the System address space and can be examined from kernel mode, except for <strong>Process Control Block</strong> (PCB) which exists in User space.</p>
 <p>Moreover, the subsystem service <code>csrss.exe</code> maintains a parallel data structure <code>CSR_PROCESS</code>. Additionally, the kernel mode part of the subsystem <code>Win32k.sys</code> maintains a per-process data structure, <code>W32PROCESS</code>. Except for the <code>idle</code> process, every process has a process object associated with it.</p>
 <blockquote>
 <p>This post introduces you to the Kernel Debugger. It is a useful tool to examine internal components. To get started, you&rsquo;ll need to -&gt;</p>
@@ -186,7 +186,7 @@
 <li>Install &ldquo;WinDbg Preview&rdquo; from Microsoft Store.</li>
 <li>After it&rsquo;s installed, go to &lsquo;Home&rsquo; -&gt;
 &lsquo;Attach to kernel&rsquo; -&gt; <em>Select</em> &lsquo;Local&rsquo;. This will start a Local Kernel Debugging Session.</li>
-<li>Once there, you can type all the commands in <code>lkd</code> in command window.</li>
+<li>Once there, you can type all the commands in <code>lkd</code> in the command window.</li>
 </ol>
 </blockquote>
 <p>To see all processes, use <code>!process 0 0</code> in the Kernel Debugger. But the output would be huge. Instead, we&rsquo;ll use <code>!process</code> with no arguments which will list information for the process owning the thread that is currently executing on CPU 0, or the current Debugging process.</p>
@@ -212,7 +212,7 @@ PROCESS ffff9f016a6e4080
     BasePriority                      8
     CommitCharge                      40393
     Job                               ffff9f016a4a3060
-</code></pre><p>This returns the address of <strong>Process Environment Block</strong> (PEB) which is the user-mode representation of the process. It contains the information by image loader, heap manager, and other Windows components that need access to it from user-mode. This corresponds to the image -&gt; <code>DbgX.Shell.exe</code> (which is the current debug shell process). To examine its <code>peb</code> we need to switch the current context to that process, this can be done using <code>.process /p</code> with the process address, <code>0xffff9f016a6e4080</code> in this case. Then examine the <code>peb</code> using <code>!peb</code> with the address passed as a parameter, which is <code>0x293d469000</code>. The complete command is -&gt; <code>.process /p ffff9f016a6e4080; !peb 293d469000</code>.</p>
+</code></pre><p>This returns the address of <strong>Process Environment Block</strong> (PEB) which is the user-mode representation of the process. It contains the information by image loader, heap manager, and other Windows components that need access to it from user mode. This corresponds to the image -&gt; <code>DbgX.Shell.exe</code> (which is the current debug shell process). To examine its <code>peb</code> we need to switch the current context to that process, this can be done using <code>.process /p</code> with the process address, <code>0xffff9f016a6e4080</code> in this case. Then examine the <code>peb</code> using <code>!peb</code> with the address passed as a parameter, which is <code>0x293d469000</code>. The complete command is -&gt; <code>.process /p ffff9f016a6e4080; !peb 293d469000</code>.</p>
 <pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">lkd&gt; .process /p ffff9f016a6e4080; !peb 293d469000
 Implicit process is now ffff9f01`6a6e4080
 PEB at 000000293d469000
@@ -259,7 +259,7 @@ PEB at 000000293d469000
 <pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">lkd&gt; dt nt!_EPROCESS ProcessLock
    +0x438 ProcessLock : _EX_PUSH_LOCK
 </code></pre><p>In the output above, the command examines <code>ProcessLock</code> (<code>_EX_PUSH_LOCK</code>) field.</p>
-<p>To see a list of kernel structures use <code>dt nt!_*</code>. Note that <code>ntkrnlmp</code> is the internal name of 64-bit kernel.</p>
+<p>To see a list of kernel structures use <code>dt nt!_*</code>. Note that <code>ntkrnlmp</code> is the internal name of the 64-bit kernel.</p>
 <pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">lkd&gt; dt nt!_*
    ntkrnlmp!_LIST_ENTRY
    ntkrnlmp!_LIST_ENTRY
@@ -366,7 +366,7 @@ Memory read error 0000000000000114
 <p><code>CreateProcessWithTokenW</code> -&gt; Part of the <code>advapi32.dll</code>, it is similar to <code>CreateProcessAsUser</code> the difference being the privileges required for the caller.</p>
 </li>
 <li>
-<p><code>CreateProcessWithLogonW</code> -&gt; A handy shortcut to logon with a given user&rsquo;s credentials (user, domain, and password).</p>
+<p><code>CreateProcessWithLogonW</code> -&gt; A handy shortcut to log on with a given user&rsquo;s credentials (user, domain, and password).</p>
 </li>
 </ol>
 <p>All of the above have different use cases but eventually, all execution paths lead to <code>CreateProcessInternal</code> which calls <code>NtCreateUserProcess</code> (part of) which makes the transition to kernel mode and continues the kernel mode part of the process creation with the same name. As the name suggests, <code>NtCreateUserProcess</code> creates a user process. A user cannot create a native process, such as <code>smss.exe</code> and <code>csrss.exe</code>, as <code>CreateProcessInternal</code> function will reject images with native subsystem image type.</p>
@@ -380,7 +380,7 @@ Memory read error 0000000000000114
 </blockquote>
 <h3 id="threads">Threads<a href="#threads" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>A thread is a subcomponent of a process that does the actual execution. A process contains threads (at a minimum, 1 thread). Threads have their address space isolated from each other and share a common address space of the process. At OS-level, a Windows thread is represented by an executive thread object. This object encapsulates <code>nt!_ETHREAD</code> (which is also an opaque kernel structure) which contains, among others, <code>nt!_KTHREAD</code> structure as its first member. <code>nt!_KTHREAD</code> points to several other structures all of which reside in system address space, with the exception of <strong>Thread Environment Block</strong> (TEB). TEB, like PEB, resides in userspace.</p>
-<p>The Windows subsystem process (csrss) maintains a parallel data structure <code>CSR_THREAD</code>. For threads that have called a Windows subsystem <code>USER</code> or <code>GDI</code> function, kernel-mode portion of the Windows Subsystem (<code>Win32k.sys</code>) maintains a per-thread data structure (<code>W32THREAD</code>) that the <code>KTHREAD</code> structure points to.</p>
+<p>The Windows subsystem process (csrss) maintains a parallel data structure <code>CSR_THREAD</code>. For threads that have called a Windows subsystem <code>USER</code> or <code>GDI</code> function, the kernel-mode portion of the Windows Subsystem (<code>Win32k.sys</code>) maintains a per-thread data structure (<code>W32THREAD</code>) that the <code>KTHREAD</code> structure points to.</p>
 <p>The simplest function to create a thread is <code>CreateThread</code> function which creates a thread in the current process. On successful completion, a non-zero handle is returned, and a unique thread ID if requested by the caller.</p>
 <p><code>CreateRemoteThread</code> is used to inject a thread into another process. It can be used by the debugger to force a break in a debugged process. The debugger injects the thread which immediately causes a breakpoint by calling the <code>DebugBreak</code> function. Another use can be to obtain information about a process when running within the target process context, this can be done for legitimate or malicious purposes.</p>
 <p>Going back to <code>lkd</code>, you can use it to examine <code>nt!_ETHREAD</code> -&gt;</p>
@@ -439,7 +439,7 @@ Memory read error 0000000000000114
 </ul>
 <p>Apart from these, other fields show stack trace, priority, thread start address, owning process, and thread state.</p>
 <h3 id="virtual-memory">Virtual Memory<a href="#virtual-memory" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>It is what is written on the box, a memory that doesn&rsquo;t exists (but mapped). When a processor writes to a memory location it writes to a virtual address. The essence of virtual memory lies in the fact that from an execution perspective, the CPU doesn&rsquo;t need to know whether the memory is mapped to RAM or Disk.</p>
+<p>It is what is written on the box, a memory that doesn&rsquo;t exists (but is mapped). When a processor writes to a memory location it writes to a virtual address. The essence of virtual memory lies in the fact that from an execution perspective, the CPU doesn&rsquo;t need to know whether the memory is mapped to RAM or Disk.</p>
 <p>Below is the layout for two &ldquo;extreme&rdquo; cases: a 32-bit process on a 32-bit system (left) and a 64-bit process on a 64-bit system (right) -&gt;</p>
 <p><img src="/images/VMLayout.png" alt="image">
 <em>Virtual Memory Layout in Different Cases, Source: Windows Kernel Programming, 2nd Edition</em></p>
@@ -494,16 +494,16 @@ ntdll!LdrpDoDebuggerBreak+0x30:
 <p><img src="/images/ObjectCat.png" alt="a">
 <em>Object categorization, Source: Windows Internals: Part 1</em></p>
 <ul>
-<li>Executive objects are implemented by various components of the executive (such as process manager, memory manager, I/O subsystem).</li>
+<li>Executive objects are implemented by various components of the executive (such as process manager, memory manager, and I/O subsystem).</li>
 <li>Kernel objects are a more primitive set of objects implemented by the Windows kernel. These objects are not visible to user-mode code but are created and used only within the executive.</li>
 <li>Majority of GDI/User objects belong to the Windows subsystem (Win32k.sys) and do not interact with the kernel.</li>
 </ul>
 <p>WinObj tool from Sysinternals displays all objects in the system.</p>
 <p><img src="/images/WinObj.png" alt="WinObj">
 <em>All <code>GLOBAL$$</code> objects as viewed in WinObj</em></p>
-<p>All such objects are preceded by an <code>nt!_OBJECT_HEADER</code> structure that contains information about the object and is used to manage the life cycle of the object, allow it to be uniquely named and secure it by applying access control, invoke object type-specific methods and track the allocator&rsquo;s quota usage.</p>
+<p>All such objects are preceded by an <code>nt!_OBJECT_HEADER</code> structure that contains information about the object and is used to manage the life cycle of the object, allow it to be uniquely named, and secure it by applying access control, invoke the object type-specific methods and track the allocator&rsquo;s quota usage.</p>
 <p>Handles are references returned to the caller by the callee (APIs in this case) that are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. Handles are always a multiple of 4, and 0 is never a valid handle value.</p>
-<p>The kernel (and driver) code can either work with handle or pointer to an object. Handles can be converted to points using <code>ObDereferenceObjectByHandle()</code> and <code>ObReferenceObjectByHandle()</code> functions. The former function returns a pointer to the object and the latter function increments the reference count of the object. The reference count is decremented when the object is no longer needed. The object is freed when the reference count reaches 0. Object manager destroys the object if its reference count reaches 0.</p>
+<p>The kernel (and driver) code can either work with a handle or pointer to an object. Handles can be converted to points using <code>ObDereferenceObjectByHandle()</code> and <code>ObReferenceObjectByHandle()</code> functions. The former function returns a pointer to the object and the latter function increments the reference count of the object. The reference count is decremented when the object is no longer needed. The object is freed when the reference count reaches 0. Object manager destroys the object if its reference count reaches 0.</p>
 <p><code>nt!_HANDLE_TABLE_ENTRY</code> represents an individual entry in the process handle table. Handle tables are allocated from Paged Pool. When a process terminates the function <code>ExSweepHandleTable()</code> closes all handles in the handle table of that process.</p>
 <p><code>!handle</code> can be used to examine the handle table of the currently running process. The output would be huge!</p>
 <pre tabindex="0"><code class="language-dbgcmd" data-lang="dbgcmd">lkd&gt; !handle
@@ -549,7 +549,7 @@ drivers maintain portability by calling the HAL routines when they need platform
 <p>VBS provides an extra layer of security as the normal OS exists as a Hyper-V VM. Windows uses Virtual Trust Levels (VTLs), which use the hypervisor to configure virtual trust levels. This is to address challenges arising from malicious driver code which could access kernel-mode memory.</p>
 <p>VBS provides extra security on top of processor isolation.</p>
 <h3 id="conclusion-and-credits">Conclusion and Credits<a href="#conclusion-and-credits" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>In this post, you learned about Windows Processes, Threads, and System Services and other specific topics like Virtual Memory, Objects, and Handles.</p>
+<p>In this post, you learned about Windows Processes, Threads, System Services, and other specific topics like Virtual Memory, Objects, and Handles.</p>
 <p>In the next post, you&rsquo;ll start building your first driver. All the subsequent posts will lay more emphasis on the driver development process and would be code intensive.</p>
 <p>Stay Tuned!</p>
 <p>Tx0actical. Out.</p>
