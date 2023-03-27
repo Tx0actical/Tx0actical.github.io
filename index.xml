@@ -10,10 +10,10 @@
     <lastBuildDate>Fri, 24 Mar 2023 12:53:24 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>0x02 Advanced Windows Internals</title>
-      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</link>
+      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2-2/</link>
       <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
       
-      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
+      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2-2/</guid>
       <description>Hello.
 KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.
 In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.</description>
@@ -506,23 +506,6 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
 &lt;p&gt;Driver Development is not something you do regularly unless you have to.&lt;/p&gt;
 &lt;p&gt;The purpose is to understand Windows internals and drivers to build anything from Anti-Virus Filter Drivers to Rootkits. Knowing Driver Development also develops Kernel Debugging skills which are great if you are interested in Windows vulnerability research.&lt;/p&gt;
 &lt;p&gt;In Part 2, you&amp;rsquo;ll learn the Advanced Windows Internals concepts required to get started with drivers.&lt;/p&gt;
-&lt;p&gt;Stay Tuned.&lt;/p&gt;
-&lt;p&gt;Tx0actical. Out.&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>System Idle Process(0)</title>
-      <link>https://Tx0actical.github.io/posts/welcome/</link>
-      <pubDate>Sun, 26 Feb 2023 13:53:19 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/posts/welcome/</guid>
-      <description>Welcome.
-In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
-Stay Tuned.
-Tx0actical. Out.</description>
-      <content>&lt;p&gt;Welcome.&lt;/p&gt;
-&lt;p&gt;In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 </content>
