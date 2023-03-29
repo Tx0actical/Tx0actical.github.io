@@ -10,10 +10,10 @@
     <lastBuildDate>Fri, 24 Mar 2023 12:53:24 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/advanced/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>0x02 Advanced Windows Internals</title>
-      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2-2/</link>
+      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</link>
       <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
       
-      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2-2/</guid>
+      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
       <description>Hello.
 KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.
 In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.</description>
@@ -319,7 +319,6 @@ A probable cause for this might be a situation where a driver misuses non-paged 
 &lt;/blockquote&gt;
 &lt;p&gt;When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). Each page in Virtual Memory is tagged to indicate what access mode the processor must be in to read/or write the page. A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&amp;rsquo;t affect other processes, they keep running.&lt;/p&gt;
 &lt;p&gt;A kernel mode component, such as a Kernel-Mode driver, shares its address space with the whole kernel. This implies if a component crashes it takes the whole system with it. The kernel, &lt;strong&gt;Hardware Abstraction Layer&lt;/strong&gt; (HAL), and kernel drivers operate in kernel space.&lt;/p&gt;
-&lt;h4 id=&#34;a-short-detour-intel-me&#34;&gt;A short Detour: Intel ME&lt;/h4&gt;
 &lt;h3 id=&#34;system-services&#34;&gt;System Services&lt;/h3&gt;
 &lt;p&gt;Or System Calls are used to request kernel services like reading from the file, thread creation, etc. System calls in Windows follow a rather complex path as compared to Unix syscalls. Under Windows, user applications don&amp;rsquo;t call the native Windows OS services directly. Rather, they go through one or more subsystem Dynamic-Link Libraries (DLLs).&lt;/p&gt;
 &lt;p&gt;Take file creation for example.&lt;/p&gt;

@@ -20,7 +20,9 @@
   
   
   
-  <link rel="stylesheet" href="https://Tx0actical.github.io/css/blue-local.css">
+  
+  
+  <link rel="stylesheet" href="https://Tx0actical.github.io/styles.css">
 
 
 
@@ -139,7 +141,7 @@
       <span class="post-author">Tx0actical</span>
     
     
-      <span class="post-reading-time">:: 22 min read (4662 words)</span>
+      <span class="post-reading-time">:: 22 min read (4657 words)</span>
     
   </div>
 
@@ -462,7 +464,6 @@ A probable cause for this might be a situation where a driver misuses non-paged 
 </blockquote>
 <p>When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). Each page in Virtual Memory is tagged to indicate what access mode the processor must be in to read/or write the page. A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&rsquo;t affect other processes, they keep running.</p>
 <p>A kernel mode component, such as a Kernel-Mode driver, shares its address space with the whole kernel. This implies if a component crashes it takes the whole system with it. The kernel, <strong>Hardware Abstraction Layer</strong> (HAL), and kernel drivers operate in kernel space.</p>
-<h4 id="a-short-detour-intel-me">A short Detour: Intel ME<a href="#a-short-detour-intel-me" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <h3 id="system-services">System Services<a href="#system-services" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Or System Calls are used to request kernel services like reading from the file, thread creation, etc. System calls in Windows follow a rather complex path as compared to Unix syscalls. Under Windows, user applications don&rsquo;t call the native Windows OS services directly. Rather, they go through one or more subsystem Dynamic-Link Libraries (DLLs).</p>
 <p>Take file creation for example.</p>
