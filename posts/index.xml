@@ -480,7 +480,7 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
     </item>
     
     <item>
-      <title>System Idle Process(0x0)</title>
+      <title>System Idle Process 0x00</title>
       <link>https://Tx0actical.github.io/posts/first-post/</link>
       <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
       
