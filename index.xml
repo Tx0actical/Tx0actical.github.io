@@ -521,11 +521,11 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
       
       <guid>https://Tx0actical.github.io/posts/first-post/</guid>
       <description>Welcome to Tx0actical’s Blog.
-In the coming weeks, I am planning to publish my first technical blogpost. I would be related to Writing Windows Kernel-Mode Drivers.
+In the coming weeks, I&amp;rsquo;ll be publishing my first blogpost documenting my journey as I learn to build KMDF drivers, titled &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;.
 Stay Tuned.
 Tx0actical. Out.</description>
       <content>&lt;p&gt;Welcome to Tx0actical’s Blog.&lt;/p&gt;
-&lt;p&gt;In the coming weeks, I am planning to publish my first technical blogpost. I would be related to Writing Windows Kernel-Mode Drivers.&lt;/p&gt;
+&lt;p&gt;In the coming weeks, I&amp;rsquo;ll be publishing my first blogpost documenting my journey as I learn to build KMDF drivers, titled &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 </content>
