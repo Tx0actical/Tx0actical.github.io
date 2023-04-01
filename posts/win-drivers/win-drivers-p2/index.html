@@ -174,10 +174,8 @@
 <p>A process is a management and containment object which represents an instance of a program. Contrary to popular belief, processes don&rsquo;t run, they &ldquo;manage&rdquo;. Each Windows process is defined by an executive process structure or <code>nt!_EPROCESS</code>. This structure (<code>typedef struct _EPROCESS EPROCESS, *PEPROCESS</code> to be exact) is the kernel&rsquo;s representation of a process object. It exists only in kernel memory, user-mode can access indirectly through handles (handles are explained later). The Windows kernel maintains a <code>nt!_EPROCESS</code> structure for every process including -&gt; System Idle Process (PID 0) and System (Process) (PID 4).</p>
 <p>It is an <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/eprocess">opaque kernel structure</a> defined as -&gt;</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">_EPROCESS</span> {
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>   ... <span style="color:#75715e">// Opaque
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>} EPROCESS, <span style="color:#f92672">*</span>PEPROCESS;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>} EPROCESS, <span style="color:#f92672">*</span>PEPROCESS;
 </span></span></code></pre></div><p><code>nt!_EPROCESS</code> and its constituent data structures are contained in the System address space and can be examined from kernel mode, except for <strong>Process Control Block</strong> (PCB) which exists in User space.</p>
 <p>Moreover, the subsystem service <code>csrss.exe</code> maintains a parallel data structure <code>CSR_PROCESS</code>. Additionally, the kernel mode part of the subsystem <code>Win32k.sys</code> maintains a per-process data structure, <code>W32PROCESS</code>. Except for the <code>idle</code> process, every process has a process object associated with it.</p>
 <blockquote>
