@@ -364,7 +364,7 @@ ntdll!LdrpDoDebuggerBreak+0x30:
   &lt;figure class=&#34;center&#34; &gt;
     &lt;img src=&#34;https://Tx0actical.github.io/images/ObjectCat.png&#34;  alt=&#34;Object categorization in Windows&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
     
-      &lt;figcaption class=&#34;center;&#34; &gt;Object categorization, Source: Windows Internals: Part 1&lt;/figcaption&gt;
+      &lt;figcaption class=&#34;center;&#34; &gt;Object categorization, Source: Windows Internals: Part 1.&lt;/figcaption&gt;
     
   &lt;/figure&gt;
 
@@ -379,7 +379,7 @@ ntdll!LdrpDoDebuggerBreak+0x30:
   &lt;figure class=&#34;center&#34; &gt;
     &lt;img src=&#34;https://Tx0actical.github.io/images/WinObj.png&#34;  alt=&#34;A screenshot showing all objects in Object manager&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
     
-      &lt;figcaption class=&#34;center;&#34; &gt;All GLOBAL$$ objects as viewed in WinObj&lt;/figcaption&gt;
+      &lt;figcaption class=&#34;center;&#34; &gt;All GLOBAL$$ objects as viewed in WinObj.&lt;/figcaption&gt;
     
   &lt;/figure&gt;
 
@@ -422,7 +422,7 @@ Object: ffff9f016abbeee0  Type: (ffff9f01638c2380) WaitCompletionPacket
   &lt;figure class=&#34;center&#34; &gt;
     &lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34;  alt=&#34;An output window showing dependencies of Notepad.exe&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
     
-      &lt;figcaption class=&#34;center;&#34; &gt;Dependency Listing of Notepad.exe in depends.exe&lt;/figcaption&gt;
+      &lt;figcaption class=&#34;center;&#34; &gt;Dependency Listing of Notepad.exe in depends.exe.&lt;/figcaption&gt;
     
   &lt;/figure&gt;
 
