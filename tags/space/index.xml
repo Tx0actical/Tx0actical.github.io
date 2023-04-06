@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Space on Tx0actical&#39;s Blog</title>
+    <link>https://Tx0actical.github.io/tags/space/</link>
+    <description>Recent content in Space on Tx0actical&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2023 Tx0actical</copyright>
+    <lastBuildDate>Thu, 06 Apr 2023 01:13:29 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/space/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GGs - Farewell to ADCS</title>
+      <link>https://Tx0actical.github.io/posts/hackasat4-gg/</link>
+      <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/posts/hackasat4-gg/</guid>
+      <description>Hi.
+Just taking a deviation from the KMDF drivers and sharing a writeup for the challenge &amp;ldquo;GGs&amp;rdquo; in Hack-a-Sat 4. GGs was a part of &amp;ldquo;Aerocapture the Flag&amp;rdquo;. There were a total of 4 challenges in this category, all of them focused on Orbital Mechanics problems.
+Hack-a-Sat(ellite) F-our (4)? Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :).</description>
+      <content>&lt;p&gt;Hi.&lt;/p&gt;
+&lt;p&gt;Just taking a deviation from the KMDF drivers and sharing a writeup for the challenge &amp;ldquo;GGs&amp;rdquo; in Hack-a-Sat 4. GGs was a part of &amp;ldquo;Aerocapture the Flag&amp;rdquo;. There were a total of 4 challenges in this category, all of them focused on Orbital Mechanics problems.&lt;/p&gt;
+&lt;h3 id=&#34;hack-a-satellite-f-our-4&#34;&gt;Hack-a-Sat(ellite) F-our (4)?&lt;/h3&gt;
+&lt;p&gt;Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :). It found the challenges interesting but difficult at the same time. With NASA announcing the astronauts for Artemis II, space is in the news.&lt;/p&gt;
+&lt;p&gt;This was the qualification round. The finals will be held at DEFCON 23.&lt;/p&gt;
+&lt;h3 id=&#34;the-challenge&#34;&gt;The Challenge&lt;/h3&gt;
+&lt;p&gt;The challenge involved maintaining direction of a radio antenna on a satellite, within 10° of NADIR.&lt;/p&gt;
+&lt;p&gt;You need to connect to challenge using netcat &lt;code&gt;nc ggs.quals2023-kah5Aiv9.satellitesabove.me 5300&lt;/code&gt; would prompt for the ticket. Upon entering that we get the following prompt -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Tx0actical@Tx0actical ~ % nc ggs.quals2023-kah5Aiv9.satellitesabove.me 5300
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Ticket please:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ticket{delta276142juliet4:GAt9v1A87_***REDACTED***} 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Randomizing challenge with seed: 14466048559470314466
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;We&amp;#39;re deploying a satellite to Geostationary orbit and our engineers told us that we dont need an ADCS system.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;However, the earth observing radio sensor we are using is directional and must always be pointing close to NADIR. 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;You may put the radio sensor facing any direction you want on the spacecraft
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;We will evaluate the satellites pointing for 10 orbits
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The antenna must remain within 10 degrees of NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The launch vehcile company said they will deploy our satellite with the antenna facing NADIR and an angular velocity matching the earth&amp;#39;s rotation
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The intertia matrix for this satellite is 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[100   0   0]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [  0 500   0]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [  0   0 500]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) : 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So here&amp;rsquo;s our challenge, let&amp;rsquo;s see what we can do!&lt;/p&gt;
+&lt;h3 id=&#34;approach&#34;&gt;Approach&lt;/h3&gt;
+&lt;p&gt;Based on the information provided, the initial orientation of the satellite is already aligned with the NADIR and has an angular velocity matching the Earth&amp;rsquo;s rotation. Therefore, we can take advantage of the satellite&amp;rsquo;s natural rotation to maintain the antenna within 10° NADIR.&lt;/p&gt;
+&lt;p&gt;To do this, we can mount the antenna along the axis with the lowest moment of inertia. From the provided inertia matrix for first satellite, it can be seen that the x-axis has the lowest moment of inertia (100 kg-m^2), followed by the y and z axes (500 kg-m^2 each).&lt;/p&gt;
+&lt;p&gt;Therefore, we would be mounting the antenna along the x-axis to take advantage of the satellite&amp;rsquo;s natural rotation and maintain the antenna pointing close to NADIR.&lt;/p&gt;
+&lt;p&gt;The expected format of the array input for this would be &lt;code&gt;1,0,0&lt;/code&gt; which corresponds to the direction vector of the x-axis. Putting in the values we get -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normalizing the axis
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Pointing axis [1. 0. 0.] NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Propegating for 10 orbits. This may take a some time...please wait
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Good --- lets design another satellite.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The intertia matrix for this satellite is 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[448.26475545  97.29984362 -92.46784697]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [ 97.29984362 317.00560902 173.90672699]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-92.46784697 173.90672699 334.72963553]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Great! Now we to mount antenna for the next satellite.&lt;/p&gt;
+&lt;p&gt;To determine the axis to mount the antenna, we need to find the principal axes of the inertia matrix. The principal axes are the eigenvectors of the inertia matrix, and they represent the directions along which the moments of inertia are maximum, minimum, and intermediate.&lt;/p&gt;
+&lt;p&gt;Using a Python script or a linear algebra calculator, we can calculate the eigenvectors of the given inertia matrix.&lt;/p&gt;
+&lt;p&gt;The code I used to calculate eigenvalues and their corresponding eigenvectors -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;I &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;array([[&lt;span style=&#34;color:#ae81ff&#34;&gt;448.26475545&lt;/span&gt;,  &lt;span style=&#34;color:#ae81ff&#34;&gt;97.29984362&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;92.46784697&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              [ &lt;span style=&#34;color:#ae81ff&#34;&gt;97.29984362&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;317.00560902&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;173.90672699&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              [&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;92.46784697&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;173.90672699&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;334.72963553&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;eigenvalues, eigenvectors &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;linalg&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;eig(I)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;smallest_eigenvalue_idx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;argmin(eigenvalues)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;smallest_eigenvector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; eigenvectors[:, smallest_eigenvalue_idx]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The smallest eigenvalue is &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;eigenvalues[smallest_eigenvalue_idx]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The corresponding eigenvector is &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;smallest_eigenvector&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output of this would be -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The smallest eigenvalue is 100.00000000115942
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The corresponding eigenvector is [-0.35963608  0.6763771  -0.64278761]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The eigenvectors are normalized and correspond to the x, y, and z axes of the body-fixed frame, respectively. The first eigenvector, [-0.35963608  0.6763771  -0.64278761], represents the direction with the lowest moment of inertia, and it corresponds to the x-axis.&lt;/p&gt;
+&lt;p&gt;The expected format of the array input for this would be &lt;code&gt;-0.35963608,0.6763771,-0.64278761&lt;/code&gt; which corresponds to the direction vector of the x-axis.&lt;/p&gt;
+&lt;p&gt;After we mount the antenna for satifying the 10° criteria for a single satellite for 10 orbits. We will be presented with another 5 intertial matrics for 5 different satellites.&lt;/p&gt;
+&lt;p&gt;After performing these steps for all satellites we get the flag after the criteria is satisfied for the last satellite -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[454.91246281 123.87699033 -25.62460015]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [123.87699033 159.65076628  70.40301031]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-25.62460015  70.40301031 485.43677091]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) :  -0.33573627,0.92242782,-0.190809
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normalizing the axis
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Pointing axis [-0.33573627  0.92242782 -0.190809  ] NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Propegating for 10 orbits. This may take a some time...please wait
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Good --- lets design another satellite.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The intertia matrix for this satellite is 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[ 417.48255604   71.73131967 -145.09468221]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [  71.73131967  437.64491512  126.12888297]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-145.09468221  126.12888297  244.87252884]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) :  -0.45419556,0.39482618,-0.79863551
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normalizing the axis
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Pointing axis [-0.45419556  0.39482618 -0.79863551] NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Propegating for 10 orbits. This may take a some time...please wait
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Good --- lets design another satellite.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Wow I guess we didnt need the ADCS after all
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag{delta276142juliet4:GFhrhPtICA_SnmCjsTJtwt4gfJkvtrJ63JskZawC8Mzbvx3xcDpCPusLxeJZnt8sWdeVIU_HmPWoeVUNKTbij9c}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Bye...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Tx0actical@Tx0actical ~ % 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&amp;rsquo;s how we get the flag!&lt;/p&gt;
+&lt;h3 id=&#34;thoughts&#34;&gt;Thoughts&lt;/h3&gt;
+&lt;p&gt;This was an &lt;em&gt;introductry&lt;/em&gt; challenge with a hint of orbital physics and astrodynamics. Other challenges were more complex than this, and hence we found it impossible to progress ahead in face of extreme odds. But nonetheless, we persevered and came 115 out of some 400 teams.&lt;/p&gt;
+&lt;p&gt;Stay Tuned!&lt;/p&gt;
+&lt;p&gt;Tx0actical. Out.&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

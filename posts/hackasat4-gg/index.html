@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>GGs - Farewell to ADCS :: Tx0actical&#39;s Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Now I know we don&#39;t need an ADCS!" />
+<meta name="keywords" content="Space, Astrodynamics" />
+<meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://Tx0actical.github.io/posts/hackasat4-gg/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://Tx0actical.github.io/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="https://Tx0actical.github.io/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="https://Tx0actical.github.io/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://twitter.com/Tx0actical" />
+  
+    <meta name="twitter:creator" content="Tx0actical" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="GGs - Farewell to ADCS">
+<meta property="og:description" content="Now I know we don&#39;t need an ADCS!" />
+<meta property="og:url" content="https://Tx0actical.github.io/posts/hackasat4-gg/" />
+<meta property="og:site_name" content="Tx0actical&#39;s Blog" />
+
+  
+  
+  <meta property="og:image" content="https://Tx0actical.github.io/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-04-06 01:13:29 &#43;0530 IST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Tx0actical
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/projects">Projects</a></li>
+        
+      
+        
+          <li><a href="/win-drivers">Windows Drivers</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/projects">Projects</a></li>
+        
+      
+        
+          <li><a href="/win-drivers">Windows Drivers</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://Tx0actical.github.io/posts/hackasat4-gg/">GGs - Farewell to ADCS</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2023-04-06 ::
+        
+      </time>
+    
+    
+      <span class="post-author">Tx0actical</span>
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://Tx0actical.github.io/tags/space/">Space</a>&nbsp;
+      
+      #<a href="https://Tx0actical.github.io/tags/astrodynamics/">Astrodynamics</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>Hi.</p>
+<p>Just taking a deviation from the KMDF drivers and sharing a writeup for the challenge &ldquo;GGs&rdquo; in Hack-a-Sat 4. GGs was a part of &ldquo;Aerocapture the Flag&rdquo;. There were a total of 4 challenges in this category, all of them focused on Orbital Mechanics problems.</p>
+<h3 id="hack-a-satellite-f-our-4">Hack-a-Sat(ellite) F-our (4)?<a href="#hack-a-satellite-f-our-4" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :). It found the challenges interesting but difficult at the same time. With NASA announcing the astronauts for Artemis II, space is in the news.</p>
+<p>This was the qualification round. The finals will be held at DEFCON 23.</p>
+<h3 id="the-challenge">The Challenge<a href="#the-challenge" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>The challenge involved maintaining direction of a radio antenna on a satellite, within 10° of NADIR.</p>
+<p>You need to connect to challenge using netcat <code>nc ggs.quals2023-kah5Aiv9.satellitesabove.me 5300</code> would prompt for the ticket. Upon entering that we get the following prompt -&gt;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Tx0actical@Tx0actical ~ % nc ggs.quals2023-kah5Aiv9.satellitesabove.me 5300
+</span></span><span style="display:flex;"><span>Ticket please:
+</span></span><span style="display:flex;"><span>ticket{delta276142juliet4:GAt9v1A87_***REDACTED***} 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Randomizing challenge with seed: 14466048559470314466
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>We&#39;re deploying a satellite to Geostationary orbit and our engineers told us that we dont need an ADCS system.
+</span></span><span style="display:flex;"><span>However, the earth observing radio sensor we are using is directional and must always be pointing close to NADIR. 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>You may put the radio sensor facing any direction you want on the spacecraft
+</span></span><span style="display:flex;"><span>We will evaluate the satellites pointing for 10 orbits
+</span></span><span style="display:flex;"><span>The antenna must remain within 10 degrees of NADIR.
+</span></span><span style="display:flex;"><span>The launch vehcile company said they will deploy our satellite with the antenna facing NADIR and an angular velocity matching the earth&#39;s rotation
+</span></span><span style="display:flex;"><span>The intertia matrix for this satellite is 
+</span></span><span style="display:flex;"><span> [[100   0   0]
+</span></span><span style="display:flex;"><span>  [  0 500   0]
+</span></span><span style="display:flex;"><span>  [  0   0 500]] kg-m^2
+</span></span><span style="display:flex;"><span>Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) : 
+</span></span></code></pre></div><p>So here&rsquo;s our challenge, let&rsquo;s see what we can do!</p>
+<h3 id="approach">Approach<a href="#approach" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Based on the information provided, the initial orientation of the satellite is already aligned with the NADIR and has an angular velocity matching the Earth&rsquo;s rotation. Therefore, we can take advantage of the satellite&rsquo;s natural rotation to maintain the antenna within 10° NADIR.</p>
+<p>To do this, we can mount the antenna along the axis with the lowest moment of inertia. From the provided inertia matrix for first satellite, it can be seen that the x-axis has the lowest moment of inertia (100 kg-m^2), followed by the y and z axes (500 kg-m^2 each).</p>
+<p>Therefore, we would be mounting the antenna along the x-axis to take advantage of the satellite&rsquo;s natural rotation and maintain the antenna pointing close to NADIR.</p>
+<p>The expected format of the array input for this would be <code>1,0,0</code> which corresponds to the direction vector of the x-axis. Putting in the values we get -&gt;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Normalizing the axis
+</span></span><span style="display:flex;"><span>Pointing axis [1. 0. 0.] NADIR.
+</span></span><span style="display:flex;"><span>Propegating for 10 orbits. This may take a some time...please wait
+</span></span><span style="display:flex;"><span>Good --- lets design another satellite.
+</span></span><span style="display:flex;"><span>The intertia matrix for this satellite is 
+</span></span><span style="display:flex;"><span> [[448.26475545  97.29984362 -92.46784697]
+</span></span><span style="display:flex;"><span>  [ 97.29984362 317.00560902 173.90672699]
+</span></span><span style="display:flex;"><span>  [-92.46784697 173.90672699 334.72963553]] kg-m^2
+</span></span></code></pre></div><p>Great! Now we to mount antenna for the next satellite.</p>
+<p>To determine the axis to mount the antenna, we need to find the principal axes of the inertia matrix. The principal axes are the eigenvectors of the inertia matrix, and they represent the directions along which the moments of inertia are maximum, minimum, and intermediate.</p>
+<p>Using a Python script or a linear algebra calculator, we can calculate the eigenvectors of the given inertia matrix.</p>
+<p>The code I used to calculate eigenvalues and their corresponding eigenvectors -&gt;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Python" data-lang="Python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>I <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">448.26475545</span>,  <span style="color:#ae81ff">97.29984362</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">92.46784697</span>],
+</span></span><span style="display:flex;"><span>              [ <span style="color:#ae81ff">97.29984362</span>, <span style="color:#ae81ff">317.00560902</span>, <span style="color:#ae81ff">173.90672699</span>],
+</span></span><span style="display:flex;"><span>              [<span style="color:#f92672">-</span><span style="color:#ae81ff">92.46784697</span>, <span style="color:#ae81ff">173.90672699</span>, <span style="color:#ae81ff">334.72963553</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>eigenvalues, eigenvectors <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>eig(I)
+</span></span><span style="display:flex;"><span>smallest_eigenvalue_idx <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>argmin(eigenvalues)
+</span></span><span style="display:flex;"><span>smallest_eigenvector <span style="color:#f92672">=</span> eigenvectors[:, smallest_eigenvalue_idx]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;The smallest eigenvalue is </span><span style="color:#e6db74">{</span>eigenvalues[smallest_eigenvalue_idx]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;The corresponding eigenvector is </span><span style="color:#e6db74">{</span>smallest_eigenvector<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>Output of this would be -&gt;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>The smallest eigenvalue is 100.00000000115942
+</span></span><span style="display:flex;"><span>The corresponding eigenvector is [-0.35963608  0.6763771  -0.64278761]
+</span></span></code></pre></div><p>The eigenvectors are normalized and correspond to the x, y, and z axes of the body-fixed frame, respectively. The first eigenvector, [-0.35963608  0.6763771  -0.64278761], represents the direction with the lowest moment of inertia, and it corresponds to the x-axis.</p>
+<p>The expected format of the array input for this would be <code>-0.35963608,0.6763771,-0.64278761</code> which corresponds to the direction vector of the x-axis.</p>
+<p>After we mount the antenna for satifying the 10° criteria for a single satellite for 10 orbits. We will be presented with another 5 intertial matrics for 5 different satellites.</p>
+<p>After performing these steps for all satellites we get the flag after the criteria is satisfied for the last satellite -&gt;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span> [[454.91246281 123.87699033 -25.62460015]
+</span></span><span style="display:flex;"><span>  [123.87699033 159.65076628  70.40301031]
+</span></span><span style="display:flex;"><span>  [-25.62460015  70.40301031 485.43677091]] kg-m^2
+</span></span><span style="display:flex;"><span>Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) :  -0.33573627,0.92242782,-0.190809
+</span></span><span style="display:flex;"><span>Normalizing the axis
+</span></span><span style="display:flex;"><span>Pointing axis [-0.33573627  0.92242782 -0.190809  ] NADIR.
+</span></span><span style="display:flex;"><span>Propegating for 10 orbits. This may take a some time...please wait
+</span></span><span style="display:flex;"><span>Good --- lets design another satellite.
+</span></span><span style="display:flex;"><span>The intertia matrix for this satellite is 
+</span></span><span style="display:flex;"><span> [[ 417.48255604   71.73131967 -145.09468221]
+</span></span><span style="display:flex;"><span>  [  71.73131967  437.64491512  126.12888297]
+</span></span><span style="display:flex;"><span>  [-145.09468221  126.12888297  244.87252884]] kg-m^2
+</span></span><span style="display:flex;"><span>Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) :  -0.45419556,0.39482618,-0.79863551
+</span></span><span style="display:flex;"><span>Normalizing the axis
+</span></span><span style="display:flex;"><span>Pointing axis [-0.45419556  0.39482618 -0.79863551] NADIR.
+</span></span><span style="display:flex;"><span>Propegating for 10 orbits. This may take a some time...please wait
+</span></span><span style="display:flex;"><span>Good --- lets design another satellite.
+</span></span><span style="display:flex;"><span>Wow I guess we didnt need the ADCS after all
+</span></span><span style="display:flex;"><span>flag{delta276142juliet4:GFhrhPtICA_SnmCjsTJtwt4gfJkvtrJ63JskZawC8Mzbvx3xcDpCPusLxeJZnt8sWdeVIU_HmPWoeVUNKTbij9c}
+</span></span><span style="display:flex;"><span>Bye...
+</span></span><span style="display:flex;"><span>Tx0actical@Tx0actical ~ % 
+</span></span></code></pre></div><p>And that&rsquo;s how we get the flag!</p>
+<h3 id="thoughts">Thoughts<a href="#thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>This was an <em>introductry</em> challenge with a hint of orbital physics and astrodynamics. Other challenges were more complex than this, and hence we found it impossible to progress ahead in face of extreme odds. But nonetheless, we persevered and came 115 out of some 400 teams.</p>
+<p>Stay Tuned!</p>
+<p>Tx0actical. Out.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>© 2023 Tx0actical</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

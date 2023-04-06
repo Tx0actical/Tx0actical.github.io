@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023 Tx0actical</copyright>
-    <lastBuildDate>Fri, 24 Mar 2023 12:53:24 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 06 Apr 2023 10:30:57 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windows Drivers</title>
+      <link>https://Tx0actical.github.io/win-drivers/</link>
+      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/win-drivers/</guid>
+      <description>Hi.
+Here&amp;rsquo;s my series on writing KMDF Drivers &amp;ldquo;Writing KMDF Drivers for Fun and Profit&amp;rdquo;. You might take a look -&amp;gt;
+0x01 Introduction and Fundamentals 0x02 Advanced Windows Internals </description>
+      <content>&lt;p&gt;Hi.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s my series on writing KMDF Drivers &amp;ldquo;Writing KMDF Drivers for Fun and Profit&amp;rdquo;. You might take a look -&amp;gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://tx0actical.github.io/posts/win-drivers/win-drivers-p1/&#34;&gt;0x01 Introduction and Fundamentals&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tx0actical.github.io/posts/win-drivers/win-drivers-p2/&#34;&gt;0x02 Advanced Windows Internals&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    </item>
+    
     <item>
       <title>0x02 Advanced Windows Internals</title>
       <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</link>
