@@ -7,47 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023 Tx0actical</copyright>
-    <lastBuildDate>Thu, 06 Apr 2023 10:30:57 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Blog</title>
-      <link>https://Tx0actical.github.io/tags/blog/</link>
-      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/blog/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Drivers</title>
-      <link>https://Tx0actical.github.io/tags/drivers/</link>
-      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/drivers/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Series</title>
-      <link>https://Tx0actical.github.io/tags/series/</link>
-      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/series/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Windows</title>
-      <link>https://Tx0actical.github.io/tags/windows/</link>
-      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/windows/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
+    <lastBuildDate>Thu, 06 Apr 2023 01:13:29 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Astrodynamics</title>
       <link>https://Tx0actical.github.io/tags/astrodynamics/</link>
@@ -84,6 +44,26 @@
       <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/tags/internals/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Windows</title>
+      <link>https://Tx0actical.github.io/tags/windows/</link>
+      <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/tags/windows/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Drivers</title>
+      <link>https://Tx0actical.github.io/tags/drivers/</link>
+      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/tags/drivers/</guid>
       <description></description>
       <content></content>
     </item>
