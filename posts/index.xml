@@ -7,11 +7,112 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023 Tx0actical</copyright>
-    <lastBuildDate>Mon, 27 Feb 2023 15:54:12 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 06 Apr 2023 01:13:29 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GGs - Farewell to ADCS</title>
+      <link>https://Tx0actical.github.io/posts/hackasat4-gg/</link>
+      <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/posts/hackasat4-gg/</guid>
+      <description>Hi.
+Just taking a deviation from the KMDF drivers and sharing a writeup for the challenge &amp;ldquo;GGs&amp;rdquo; in Hack-a-Sat 4. GGs was a part of &amp;ldquo;Aerocapture the Flag&amp;rdquo;. There were a total of 4 challenges in this category, all of them focused on Orbital Mechanics problems.
+Hack-a-Sat(ellite) F-our (4)? Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :).</description>
+      <content>&lt;p&gt;Hi.&lt;/p&gt;
+&lt;p&gt;Just taking a deviation from the KMDF drivers and sharing a writeup for the challenge &amp;ldquo;GGs&amp;rdquo; in Hack-a-Sat 4. GGs was a part of &amp;ldquo;Aerocapture the Flag&amp;rdquo;. There were a total of 4 challenges in this category, all of them focused on Orbital Mechanics problems.&lt;/p&gt;
+&lt;h3 id=&#34;hack-a-satellite-f-our-4&#34;&gt;Hack-a-Sat(ellite) F-our (4)?&lt;/h3&gt;
+&lt;p&gt;Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :). It found the challenges interesting but difficult at the same time. With NASA announcing the astronauts for Artemis II, space is in the news.&lt;/p&gt;
+&lt;p&gt;This was the qualification round. The finals will be held at DEFCON 23.&lt;/p&gt;
+&lt;h3 id=&#34;the-challenge&#34;&gt;The Challenge&lt;/h3&gt;
+&lt;p&gt;The challenge involved maintaining direction of a radio antenna on a satellite, within 10° of NADIR.&lt;/p&gt;
+&lt;p&gt;You need to connect to challenge using netcat &lt;code&gt;nc ggs.quals2023-kah5Aiv9.satellitesabove.me 5300&lt;/code&gt; would prompt for the ticket. Upon entering that we get the following prompt -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Tx0actical@Tx0actical ~ % nc ggs.quals2023-kah5Aiv9.satellitesabove.me 5300
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Ticket please:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ticket{delta276142juliet4:GAt9v1A87_***REDACTED***} 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Randomizing challenge with seed: 14466048559470314466
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;We&amp;#39;re deploying a satellite to Geostationary orbit and our engineers told us that we dont need an ADCS system.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;However, the earth observing radio sensor we are using is directional and must always be pointing close to NADIR. 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;You may put the radio sensor facing any direction you want on the spacecraft
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;We will evaluate the satellites pointing for 10 orbits
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The antenna must remain within 10 degrees of NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The launch vehcile company said they will deploy our satellite with the antenna facing NADIR and an angular velocity matching the earth&amp;#39;s rotation
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The intertia matrix for this satellite is 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[100   0   0]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [  0 500   0]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [  0   0 500]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) : 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So here&amp;rsquo;s our challenge, let&amp;rsquo;s see what we can do!&lt;/p&gt;
+&lt;h3 id=&#34;approach&#34;&gt;Approach&lt;/h3&gt;
+&lt;p&gt;Based on the information provided, the initial orientation of the satellite is already aligned with the NADIR and has an angular velocity matching the Earth&amp;rsquo;s rotation. Therefore, we can take advantage of the satellite&amp;rsquo;s natural rotation to maintain the antenna within 10° NADIR.&lt;/p&gt;
+&lt;p&gt;To do this, we can mount the antenna along the axis with the lowest moment of inertia. From the provided inertia matrix for first satellite, it can be seen that the x-axis has the lowest moment of inertia (100 kg-m^2), followed by the y and z axes (500 kg-m^2 each).&lt;/p&gt;
+&lt;p&gt;Therefore, we would be mounting the antenna along the x-axis to take advantage of the satellite&amp;rsquo;s natural rotation and maintain the antenna pointing close to NADIR.&lt;/p&gt;
+&lt;p&gt;The expected format of the array input for this would be &lt;code&gt;1,0,0&lt;/code&gt; which corresponds to the direction vector of the x-axis. Putting in the values we get -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normalizing the axis
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Pointing axis [1. 0. 0.] NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Propegating for 10 orbits. This may take a some time...please wait
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Good --- lets design another satellite.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The intertia matrix for this satellite is 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[448.26475545  97.29984362 -92.46784697]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [ 97.29984362 317.00560902 173.90672699]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-92.46784697 173.90672699 334.72963553]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Great! Now we to mount antenna for the next satellite.&lt;/p&gt;
+&lt;p&gt;To determine the axis to mount the antenna, we need to find the principal axes of the inertia matrix. The principal axes are the eigenvectors of the inertia matrix, and they represent the directions along which the moments of inertia are maximum, minimum, and intermediate.&lt;/p&gt;
+&lt;p&gt;Using a Python script or a linear algebra calculator, we can calculate the eigenvectors of the given inertia matrix.&lt;/p&gt;
+&lt;p&gt;The code I used to calculate eigenvalues and their corresponding eigenvectors -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;I &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;array([[&lt;span style=&#34;color:#ae81ff&#34;&gt;448.26475545&lt;/span&gt;,  &lt;span style=&#34;color:#ae81ff&#34;&gt;97.29984362&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;92.46784697&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              [ &lt;span style=&#34;color:#ae81ff&#34;&gt;97.29984362&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;317.00560902&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;173.90672699&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              [&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;92.46784697&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;173.90672699&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;334.72963553&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;eigenvalues, eigenvectors &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;linalg&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;eig(I)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;smallest_eigenvalue_idx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;argmin(eigenvalues)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;smallest_eigenvector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; eigenvectors[:, smallest_eigenvalue_idx]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The smallest eigenvalue is &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;eigenvalues[smallest_eigenvalue_idx]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The corresponding eigenvector is &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;smallest_eigenvector&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output of this would be -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The smallest eigenvalue is 100.00000000115942
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The corresponding eigenvector is [-0.35963608  0.6763771  -0.64278761]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The eigenvectors are normalized and correspond to the x, y, and z axes of the body-fixed frame, respectively. The first eigenvector, [-0.35963608  0.6763771  -0.64278761], represents the direction with the lowest moment of inertia, and it corresponds to the x-axis.&lt;/p&gt;
+&lt;p&gt;The expected format of the array input for this would be &lt;code&gt;-0.35963608,0.6763771,-0.64278761&lt;/code&gt; which corresponds to the direction vector of the x-axis.&lt;/p&gt;
+&lt;p&gt;After we mount the antenna for satifying the 10° criteria for a single satellite for 10 orbits. We will be presented with another 5 intertial matrics for 5 different satellites.&lt;/p&gt;
+&lt;p&gt;After performing these steps for all satellites we get the flag after the criteria is satisfied for the last satellite -&amp;gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[454.91246281 123.87699033 -25.62460015]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [123.87699033 159.65076628  70.40301031]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-25.62460015  70.40301031 485.43677091]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) :  -0.33573627,0.92242782,-0.190809
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normalizing the axis
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Pointing axis [-0.33573627  0.92242782 -0.190809  ] NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Propegating for 10 orbits. This may take a some time...please wait
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Good --- lets design another satellite.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;The intertia matrix for this satellite is 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[ 417.48255604   71.73131967 -145.09468221]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [  71.73131967  437.64491512  126.12888297]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-145.09468221  126.12888297  244.87252884]] kg-m^2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Which body fixed axis would you like to mount the antenna ( eg: x,y,z ) :  -0.45419556,0.39482618,-0.79863551
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Normalizing the axis
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Pointing axis [-0.45419556  0.39482618 -0.79863551] NADIR.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Propegating for 10 orbits. This may take a some time...please wait
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Good --- lets design another satellite.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Wow I guess we didnt need the ADCS after all
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flag{delta276142juliet4:GFhrhPtICA_SnmCjsTJtwt4gfJkvtrJ63JskZawC8Mzbvx3xcDpCPusLxeJZnt8sWdeVIU_HmPWoeVUNKTbij9c}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Bye...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Tx0actical@Tx0actical ~ % 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&amp;rsquo;s how we get the flag!&lt;/p&gt;
+&lt;h3 id=&#34;thoughts&#34;&gt;Thoughts&lt;/h3&gt;
+&lt;p&gt;This was an &lt;em&gt;introductry&lt;/em&gt; challenge with a hint of orbital physics and astrodynamics. Other challenges were more complex than this, and hence we found it impossible to progress ahead in face of extreme odds. But nonetheless, we persevered and came 115 out of some 400 teams.&lt;/p&gt;
+&lt;p&gt;Stay Tuned!&lt;/p&gt;
+&lt;p&gt;Tx0actical. Out.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>0x02 Advanced Windows Internals</title>
       <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</link>
-      <pubDate>Mon, 27 Feb 2023 15:54:12 +0530</pubDate>
+      <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
       <description>Hello.
@@ -22,17 +123,22 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
 &lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.&lt;/p&gt;
 &lt;p&gt;With this, I wanted to focus on experimentation and a deep-dive explanation and do something different instead of replaying information that already exists. Outputs of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
 &lt;p&gt;Anyone who&amp;rsquo;s ever dug a little deep about Windows might be familiar with this image:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/WinArch.png&#34; alt=&#34;WinArch&#34;&gt;
-&lt;em&gt;General Architecture, Source: Windows Internals: Part 1&lt;/em&gt;&lt;/p&gt;
+
+  &lt;figure class=&#34;center&#34; &gt;
+    &lt;img src=&#34;https://Tx0actical.github.io/images/WinArch.png&#34;  alt=&#34;Object categorization in Windows&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
+    
+      &lt;figcaption class=&#34;center;&#34; &gt;General Architecture, Source: Windows Internals: Part 1.&lt;/figcaption&gt;
+    
+  &lt;/figure&gt;
+
+
 &lt;p&gt;We&amp;rsquo;ll now examine this architecture in detail.&lt;/p&gt;
 &lt;h3 id=&#34;processes&#34;&gt;Processes&lt;/h3&gt;
 &lt;p&gt;A process is a management and containment object which represents an instance of a program. Contrary to popular belief, processes don&amp;rsquo;t run, they &amp;ldquo;manage&amp;rdquo;. Each Windows process is defined by an executive process structure or &lt;code&gt;nt!_EPROCESS&lt;/code&gt;. This structure (&lt;code&gt;typedef struct _EPROCESS EPROCESS, *PEPROCESS&lt;/code&gt; to be exact) is the kernel&amp;rsquo;s representation of a process object. It exists only in kernel memory, user-mode can access indirectly through handles (handles are explained later). The Windows kernel maintains a &lt;code&gt;nt!_EPROCESS&lt;/code&gt; structure for every process including -&amp;gt; System Idle Process (PID 0) and System (Process) (PID 4).&lt;/p&gt;
 &lt;p&gt;It is an &lt;a href=&#34;https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/eprocess&#34;&gt;opaque kernel structure&lt;/a&gt; defined as -&amp;gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-C++&#34; data-lang=&#34;C++&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_EPROCESS&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   ... &lt;span style=&#34;color:#75715e&#34;&gt;// Opaque
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;} EPROCESS, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;PEPROCESS;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;} EPROCESS, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;PEPROCESS;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;nt!_EPROCESS&lt;/code&gt; and its constituent data structures are contained in the System address space and can be examined from kernel mode, except for &lt;strong&gt;Process Control Block&lt;/strong&gt; (PCB) which exists in User space.&lt;/p&gt;
 &lt;p&gt;Moreover, the subsystem service &lt;code&gt;csrss.exe&lt;/code&gt; maintains a parallel data structure &lt;code&gt;CSR_PROCESS&lt;/code&gt;. Additionally, the kernel mode part of the subsystem &lt;code&gt;Win32k.sys&lt;/code&gt; maintains a per-process data structure, &lt;code&gt;W32PROCESS&lt;/code&gt;. Except for the &lt;code&gt;idle&lt;/code&gt; process, every process has a process object associated with it.&lt;/p&gt;
 &lt;blockquote&gt;
@@ -298,26 +404,33 @@ Memory read error 0000000000000114
 &lt;h3 id=&#34;virtual-memory&#34;&gt;Virtual Memory&lt;/h3&gt;
 &lt;p&gt;It is what is written on the box, a memory that doesn&amp;rsquo;t exists (but is mapped). When a processor writes to a memory location it writes to a virtual address. The essence of virtual memory lies in the fact that from an execution perspective, the CPU doesn&amp;rsquo;t need to know whether the memory is mapped to RAM or Disk.&lt;/p&gt;
 &lt;p&gt;Below is the layout for two &amp;ldquo;extreme&amp;rdquo; cases: a 32-bit process on a 32-bit system (left) and a 64-bit process on a 64-bit system (right) -&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/VMLayout.png&#34; alt=&#34;image&#34;&gt;
-&lt;em&gt;Virtual Memory Layout in Different Cases, Source: Windows Kernel Programming, 2nd Edition&lt;/em&gt;&lt;/p&gt;
+
+  &lt;figure class=&#34;center&#34; &gt;
+    &lt;img src=&#34;https://Tx0actical.github.io/images/VMLayout.png&#34;  alt=&#34;Object categorization in Windows&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
+    
+      &lt;figcaption class=&#34;center;&#34; &gt;Virtual Memory Layout in Different Cases, Source: Windows Kernel Programming, 2nd Edition.&lt;/figcaption&gt;
+    
+  &lt;/figure&gt;
+
+
 &lt;p&gt;If the requested page doesn&amp;rsquo;t exist in RAM, the CPU raises a page fault exception, which causes the memory manager&amp;rsquo;s page fault exception handler to fetch data from the file (if it&amp;rsquo;s a valid page fault), copy it to RAM, update the page table entries and instruct CPU to try again.&lt;/p&gt;
 &lt;p&gt;Windows also supports large pages, by using &lt;strong&gt;Page Directory Entry&lt;/strong&gt; (PDE) to directly map a large page without using a page table. This makes better use of &lt;strong&gt;Translation Lookaside Buffer&lt;/strong&gt; (TLB) - a cache of recently translated pages maintained by the CPU.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;A non-paged area is a memory region that is guaranteed to remain in memory as it&amp;rsquo;s never paged. But the Windows Bug Check error PAGE_FAULT_IN_NONPAGED_AREA (0x00000050) seemingly contradicts this idea that a page fault cannot happen in a region where the referenced memory is guaranteed to be in RAM. Interesting!
-A probable cause for this might be a situation where a driver misuses non-paged pool allocations and/or references invalid memory. Bad driver code or corrupt system memory is the major reason.&lt;/p&gt;
+&lt;p&gt;A non-paged area is a memory region that is guaranteed to remain in memory as it&amp;rsquo;s never paged. But the Windows Bug Check error &lt;code&gt;PAGE_FAULT_IN_NONPAGED_AREA&lt;/code&gt; (&lt;code&gt;0x00000050&lt;/code&gt;) seemingly contradicts this idea that a page fault cannot happen in a region where the referenced memory is guaranteed to be in RAM. Interesting!
+A probable cause for this might be a situation where a driver misuses non-paged pool allocations and/or references invalid memory. Bad driver code or corrupt system memory is the major reason almost all the time.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;mode-of-execution&#34;&gt;Mode of Execution&lt;/h3&gt;
-&lt;p&gt;This refers to the nature of the code being executed. Does that belong to a user application or a part of a kernel component? The nature of code determines the privilege assigned to it. To support this structure, x64 processors are divided into privilege rings -&amp;gt; Ring 3 to Ring 0.&lt;/p&gt;
+&lt;p&gt;This refers to the nature of the code being executed. Does that belong to a user application or a part of a kernel component? The nature of code determines the privilege assigned to it. To support this structure, x64 processors are divided into privilege levels/rings -&amp;gt; Ring 3 to Ring 0. The purpose is to differentiate system and user data, and to protect it from inadvertent/malicious access or writes.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Actually, these rings go even deeper in modern Intel/AMD Processors -&amp;gt;&lt;/p&gt;
+&lt;p&gt;These rings go even deeper in modern Intel/AMD Processors -&amp;gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Ring -1: Hypervisor&lt;/li&gt;
-&lt;li&gt;Ring -2: System Management Mode&lt;/li&gt;
-&lt;li&gt;Ring -3: Intel Management Engine (ME)
-Below these exist the Microcode and the actual Silicon.&lt;/li&gt;
+&lt;li&gt;Ring -2: System Management Mode (SMM)&lt;/li&gt;
+&lt;li&gt;Ring -3: Intel Management Engine (ME). With a special emphasis, this sub-component is downright dystopian. To understand why, I highly encourage you go to through the post -&amp;gt; &lt;a href=&#34;https://medium.com/swlh/negative-rings-in-intel-architecture-the-security-threats-youve-probably-never-heard-of-d725a4b6f831&#34;&gt;Negative Rings in Intel Architecture: The Security Threats That You’ve Probably Never Heard Of&lt;/a&gt; on Medium by &lt;a href=&#34;https://medium.com/@RealWorldCyberSecurity&#34;&gt;RealWorldCyberSecurity&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;Below these exist the Microcode (which is a layer between CPU hardware and programmer visible ISA) and the actual Silicon.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&amp;rsquo;t affect other processes, they keep running.&lt;/p&gt;
+&lt;p&gt;When a user launches an application, Windows creates a private virtual address space and a private handle table (more on this later). Each page in Virtual Memory is tagged to indicate what access mode the processor must be in to read/or write the page. A user-mode application has its own private address space isolated from other processes and the OS. So, if a process crashes, it doesn&amp;rsquo;t affect other processes, they keep running.&lt;/p&gt;
 &lt;p&gt;A kernel mode component, such as a Kernel-Mode driver, shares its address space with the whole kernel. This implies if a component crashes it takes the whole system with it. The kernel, &lt;strong&gt;Hardware Abstraction Layer&lt;/strong&gt; (HAL), and kernel drivers operate in kernel space.&lt;/p&gt;
 &lt;h3 id=&#34;system-services&#34;&gt;System Services&lt;/h3&gt;
 &lt;p&gt;Or System Calls are used to request kernel services like reading from the file, thread creation, etc. System calls in Windows follow a rather complex path as compared to Unix syscalls. Under Windows, user applications don&amp;rsquo;t call the native Windows OS services directly. Rather, they go through one or more subsystem Dynamic-Link Libraries (DLLs).&lt;/p&gt;
@@ -348,16 +461,30 @@ ntdll!LdrpDoDebuggerBreak+0x30:
 &lt;h3 id=&#34;objects-and-handles&#34;&gt;Objects and Handles&lt;/h3&gt;
 &lt;p&gt;In Windows, an object is a single, runtime instance of a statically defined object. They are kernel data structures representing commonly used facilities like files, registry keys, processes, threads, devices, etc. that are managed by the Object Manager, a component of the Windows Kernel. Not all objects have names, for eg., processes and threads don&amp;rsquo;t have names - they have IDs. That’s why the &lt;code&gt;OpenProcess()&lt;/code&gt; and &lt;code&gt;OpenThread()&lt;/code&gt; functions require a process/thread identifier (a number) rather than a string-base name.&lt;/p&gt;
 &lt;p&gt;Windows has three primary types of objects: Executive Objects, Kernel Objects, and GDI/User Objects.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/ObjectCat.png&#34; alt=&#34;a&#34;&gt;
-&lt;em&gt;Object categorization, Source: Windows Internals: Part 1&lt;/em&gt;&lt;/p&gt;
+
+  &lt;figure class=&#34;center&#34; &gt;
+    &lt;img src=&#34;https://Tx0actical.github.io/images/ObjectCat.png&#34;  alt=&#34;Object categorization in Windows&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
+    
+      &lt;figcaption class=&#34;center;&#34; &gt;Object categorization, Source: Windows Internals: Part 1.&lt;/figcaption&gt;
+    
+  &lt;/figure&gt;
+
+
 &lt;ul&gt;
 &lt;li&gt;Executive objects are implemented by various components of the executive (such as process manager, memory manager, and I/O subsystem).&lt;/li&gt;
 &lt;li&gt;Kernel objects are a more primitive set of objects implemented by the Windows kernel. These objects are not visible to user-mode code but are created and used only within the executive.&lt;/li&gt;
 &lt;li&gt;Majority of GDI/User objects belong to the Windows subsystem (Win32k.sys) and do not interact with the kernel.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;WinObj tool from Sysinternals displays all objects in the system.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/WinObj.png&#34; alt=&#34;WinObj&#34;&gt;
-&lt;em&gt;All &lt;code&gt;GLOBAL$$&lt;/code&gt; objects as viewed in WinObj&lt;/em&gt;&lt;/p&gt;
+
+  &lt;figure class=&#34;center&#34; &gt;
+    &lt;img src=&#34;https://Tx0actical.github.io/images/WinObj.png&#34;  alt=&#34;A screenshot showing all objects in Object manager&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
+    
+      &lt;figcaption class=&#34;center;&#34; &gt;All GLOBAL$$ objects as viewed in WinObj.&lt;/figcaption&gt;
+    
+  &lt;/figure&gt;
+
+
 &lt;p&gt;All such objects are preceded by an &lt;code&gt;nt!_OBJECT_HEADER&lt;/code&gt; structure that contains information about the object and is used to manage the life cycle of the object, allow it to be uniquely named, and secure it by applying access control, invoke the object type-specific methods and track the allocator&amp;rsquo;s quota usage.&lt;/p&gt;
 &lt;p&gt;Handles are references returned to the caller by the callee (APIs in this case) that are then translated to pointers by WDF. Processes in Windows have their own handle table which is stored in the kernel virtual address space. Handles are always a multiple of 4, and 0 is never a valid handle value.&lt;/p&gt;
 &lt;p&gt;The kernel (and driver) code can either work with a handle or pointer to an object. Handles can be converted to points using &lt;code&gt;ObDereferenceObjectByHandle()&lt;/code&gt; and &lt;code&gt;ObReferenceObjectByHandle()&lt;/code&gt; functions. The former function returns a pointer to the object and the latter function increments the reference count of the object. The reference count is decremented when the object is no longer needed. The object is freed when the reference count reaches 0. Object manager destroys the object if its reference count reaches 0.&lt;/p&gt;
@@ -392,8 +519,15 @@ Object: ffff9f016abbeee0  Type: (ffff9f01638c2380) WaitCompletionPacket
 &lt;p&gt;This means that some things that can be done from an application built on one subsystem can&amp;rsquo;t be done by another application built on another subsystem. Each executable image &lt;code&gt;.exe&lt;/code&gt; is bound to only one subsystem. Subsystems are started by the Session Manager (Smss.exe) process. Subsystem startup information is stored under the registry key &lt;code&gt;HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\SubSystems&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;During process creation, the process creation code examines the sub-system type header code and notifies the target subsystem of the new process. This type of code is defined in the &lt;code&gt;/SUBSYSTEM&lt;/code&gt; linker flag of Visual Studio Linker.&lt;/p&gt;
 &lt;p&gt;You can view the image subsystem type using the Dependency Walker (depends.exe). If you check &lt;em&gt;notepad.exe&lt;/em&gt; -&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34; alt=&#34;depends&#34;&gt;
-&lt;em&gt;Dependency Listing of Notepad.exe in depends.exe&lt;/em&gt;&lt;/p&gt;
+
+  &lt;figure class=&#34;center&#34; &gt;
+    &lt;img src=&#34;https://Tx0actical.github.io/images/dependsNotepad.png&#34;  alt=&#34;An output window showing dependencies of Notepad.exe&#34;   style=&#34;border-radius: 8px;&#34;  /&gt;
+    
+      &lt;figcaption class=&#34;center;&#34; &gt;Dependency Listing of Notepad.exe in depends.exe.&lt;/figcaption&gt;
+    
+  &lt;/figure&gt;
+
+
 &lt;p&gt;The role of subsystem DLLs is to translate a documented function into the appropriate internal (and generally undocumented) native system service calls implemented mostly in &lt;code&gt;NTDLL.DLL&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;NTDLL.DLL&lt;/code&gt; comprises the lowest layer of code that still runs in user mode. It acts as a special support library primarily for the use of subsystem DLLs and native applications. Native images are those images that are not tied to any particular subsystem.&lt;/p&gt;
 &lt;h3 id=&#34;hardware-abstraction-layer-hal&#34;&gt;Hardware Abstraction Layer (HAL)&lt;/h3&gt;
@@ -480,17 +614,17 @@ NTSTATUS DriverEntry (_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Reg
     </item>
     
     <item>
-      <title>System Idle Process(0)</title>
-      <link>https://Tx0actical.github.io/posts/welcome/</link>
-      <pubDate>Sun, 26 Feb 2023 13:53:19 +0530</pubDate>
+      <title>System Idle Process 0x00</title>
+      <link>https://Tx0actical.github.io/posts/first-post/</link>
+      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
       
-      <guid>https://Tx0actical.github.io/posts/welcome/</guid>
-      <description>Welcome.
-In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.
+      <guid>https://Tx0actical.github.io/posts/first-post/</guid>
+      <description>Welcome to Tx0actical’s Blog.
+In the coming weeks, I&amp;rsquo;ll be publishing my first blogpost documenting my journey as I learn to build KMDF drivers, titled &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;.
 Stay Tuned.
 Tx0actical. Out.</description>
-      <content>&lt;p&gt;Welcome.&lt;/p&gt;
-&lt;p&gt;In the coming weeks, I&amp;rsquo;ll be publishing a series of blogposts, titled &amp;ldquo;Writing Windows Kernel-Mode Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
+      <content>&lt;p&gt;Welcome to Tx0actical’s Blog.&lt;/p&gt;
+&lt;p&gt;In the coming weeks, I&amp;rsquo;ll be publishing my first blogpost documenting my journey as I learn to build KMDF drivers, titled &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;Stay Tuned.&lt;/p&gt;
 &lt;p&gt;Tx0actical. Out.&lt;/p&gt;
 </content>
