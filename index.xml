@@ -114,7 +114,7 @@ Hack-a-Sat(ellite) F-our (4)? Hack-a-Sat is an annual CTF competition that focus
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The eigenvectors are normalized and correspond to the x, y, and z axes of the body-fixed frame, respectively. The first eigenvector, [-0.35963608  0.6763771  -0.64278761], represents the direction with the lowest moment of inertia, and it corresponds to the x-axis.&lt;/p&gt;
 &lt;p&gt;The expected format of the array input for this would be &lt;code&gt;-0.35963608,0.6763771,-0.64278761&lt;/code&gt; which corresponds to the direction vector of the x-axis.&lt;/p&gt;
 &lt;p&gt;After we mount the antenna for satifying the 10° criteria for a single satellite for 10 orbits. We will be presented with another 5 intertial matrics for 5 different satellites.&lt;/p&gt;
-&lt;p&gt;After performing these steps for all satellites we get the flag after the criteria is satisfied for the last satellite -&amp;gt;&lt;/p&gt;
+&lt;p&gt;Performing these steps for all satellites we get the flag after the criteria is satisfied for the last satellite -&amp;gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; [[454.91246281 123.87699033 -25.62460015]
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [123.87699033 159.65076628  70.40301031]
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  [-25.62460015  70.40301031 485.43677091]] kg-m^2
