@@ -5,7 +5,7 @@
     <link>https://Tx0actical.github.io/tags/internals/</link>
     <description>Recent content in Internals on Tx0actical&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>en</language>
     <lastBuildDate>Fri, 24 Mar 2023 12:53:24 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/internals/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>0x02 Advanced Windows Internals</title>
@@ -19,7 +19,7 @@ In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun an
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.&lt;/p&gt;
 &lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.&lt;/p&gt;
-&lt;p&gt;With this, I wanted to focus on experimentation and a deep-dive explanation and do something different instead of replaying information that already exists. Outputs of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
+&lt;p&gt;With this, I wanted to focus on experimentation and a deep-dive explanation and do something different instead of replaying information that already exists. Output of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
 &lt;p&gt;Anyone who&amp;rsquo;s ever dug a little deep about Windows might be familiar with this image:&lt;/p&gt;
 
   &lt;figure class=&#34;center&#34; &gt;
