@@ -5,8 +5,7 @@
     <link>https://Tx0actical.github.io/</link>
     <description>Recent content on Tx0actical&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>© 2023 Tx0actical</copyright>
+    <language>en</language>
     <lastBuildDate>Thu, 06 Apr 2023 01:13:29 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Writeups</title>
@@ -16,11 +15,11 @@
       <guid>https://Tx0actical.github.io/writeups/</guid>
       <description>Hi.
 Here&amp;rsquo;s you&amp;rsquo;ll find write-ups for various CTF challenges that I participate in, alongwith my team-members at Sid3Chann3l.
-GGs - Farewell to ADCS. This was a challenge in HAS4 this year. </description>
+GGs - Farewell to ADCS. This was a challenge in this year&amp;rsquo;s HAS4 Qualifier. </description>
       <content>&lt;p&gt;Hi.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s you&amp;rsquo;ll find write-ups for various CTF challenges that I participate in, alongwith my team-members at &lt;strong&gt;Sid3Chann3l&lt;/strong&gt;.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://tx0actical.github.io/posts/hackasat4-gg/&#34;&gt;GGs - Farewell to ADCS&lt;/a&gt;. This was a challenge in HAS4 this year.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tx0actical.github.io/posts/hackasat4-gg/&#34;&gt;GGs - Farewell to ADCS&lt;/a&gt;. This was a challenge in this year&amp;rsquo;s HAS4 Qualifier.&lt;/li&gt;
 &lt;/ul&gt;
 </content>
     </item>
@@ -167,11 +166,11 @@ Find more details here -&amp;gt; https://github.com/Tx0actical/Epsilon</descript
       <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
       <description>Hello.
 KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.
-In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.</description>
+In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
 &lt;p&gt;KMDF (or WDF for that matter) being a Windows thing, you need to understand some Windows fundamentals.&lt;/p&gt;
-&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference if you will.&lt;/p&gt;
-&lt;p&gt;With this, I wanted to focus on experimentation and a deep-dive explanation and do something different instead of replaying information that already exists. Outputs of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
+&lt;p&gt;In this iteration, Part 2, of &amp;ldquo;Writing Windows KMDF Drivers for Fun and Profit&amp;rdquo;, I&amp;rsquo;ll introduce you to important Windows Concepts such as Processes, Threads, Virtual Memory, System Services, Objects and Handles, Subsystems, and the Hyper-V Hypervisor. You&amp;rsquo;ll discover these constructs in great detail in this post. This post is informational and explorational in nature and can be treated as a reference, if you will.&lt;/p&gt;
+&lt;p&gt;With this, I wanted to focus on experimentation and a deep-dive explanation and do something different instead of replaying information that already exists. Output of various debugger commands are snipped indicated by a &lt;code&gt;...&lt;/code&gt; for the sake of brevity.&lt;/p&gt;
 &lt;p&gt;Anyone who&amp;rsquo;s ever dug a little deep about Windows might be familiar with this image:&lt;/p&gt;
 
   &lt;figure class=&#34;center&#34; &gt;
@@ -607,11 +606,11 @@ drivers maintain portability by calling the HAL routines when they need platform
       
       <guid>https://Tx0actical.github.io/about/</guid>
       <description>Hello.
-A Cybersecurity Enthusiast @Tx0actical, Red Teaming, Windows, and Active Directory (AD) are my interests. I am a part of the CTF Team, Sid3Chann3l and an Undergraduate Computer Science Student. You can find me on -&amp;gt;
+Passionate about Red Teaming, Windows Internals, Reverse Engineering, Web Application and Active Directory (AD) Security, I am a member of the CTF Team, Sid3Chann3l and an Undergraduate Computer Science Student. You can find me on -&amp;gt;
 LinkedIn -&amp;gt; https://www.linkedin.com/in/amit-panghal-a05a05226/ Twitter -&amp;gt; https://twitter.com/Tx0actical GitHub -&amp;gt; https://github.com/Tx0actical Discord -&amp;gt; [👻🛡] Tx0actical#3215 Have a Great Day!
 Tx0actical. Out.</description>
       <content>&lt;p&gt;Hello.&lt;/p&gt;
-&lt;p&gt;A Cybersecurity Enthusiast @&lt;strong&gt;Tx0actical&lt;/strong&gt;, Red Teaming, Windows, and Active Directory (AD) are my interests. I am a part of the CTF Team, &lt;strong&gt;Sid3Chann3l&lt;/strong&gt; and an Undergraduate Computer Science Student. You can find me on -&amp;gt;&lt;/p&gt;
+&lt;p&gt;Passionate about Red Teaming, Windows Internals, Reverse Engineering, Web Application and Active Directory (AD) Security, I am a member of the CTF Team, &lt;strong&gt;Sid3Chann3l&lt;/strong&gt; and an Undergraduate Computer Science Student. You can find me on -&amp;gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;LinkedIn -&amp;gt; &lt;a href=&#34;https://www.linkedin.com/in/amit-panghal-a05a05226/&#34;&gt;https://www.linkedin.com/in/amit-panghal-a05a05226/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Twitter -&amp;gt; &lt;a href=&#34;https://twitter.com/Tx0actical&#34;&gt;https://twitter.com/Tx0actical&lt;/a&gt;&lt;/li&gt;
