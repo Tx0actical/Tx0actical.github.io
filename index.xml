@@ -150,10 +150,10 @@ Hack-a-Sat(ellite) F-our (4)? Hack-a-Sat is an annual CTF competition that focus
       
       <guid>https://Tx0actical.github.io/projects/</guid>
       <description>Hi.
-This section showcases the project I&amp;rsquo;m working on&amp;hellip; It&amp;rsquo;s called Epsilon, a ML-powered PowerShell script to scan Windows system for misconfigurations, and take context-based action to remediate issues using data parsed from Windows Event Logs.
+This section showcases the project I&amp;rsquo;m working on&amp;hellip; It&amp;rsquo;s called Epsilon, a ML-powered PowerShell script to scan Windows system for misconfigurations, and take context-based action to remediate issues using data parsed from Windows Event Logs. It remains in development as of now.
 Find more details here -&amp;gt; https://github.com/Tx0actical/Epsilon</description>
       <content>&lt;p&gt;Hi.&lt;/p&gt;
-&lt;p&gt;This section showcases the project I&amp;rsquo;m working on&amp;hellip; It&amp;rsquo;s called Epsilon, a ML-powered PowerShell script to scan Windows system for misconfigurations, and take context-based action to remediate issues using data parsed from Windows Event Logs.&lt;/p&gt;
+&lt;p&gt;This section showcases the project I&amp;rsquo;m working on&amp;hellip; It&amp;rsquo;s called Epsilon, a ML-powered PowerShell script to scan Windows system for misconfigurations, and take context-based action to remediate issues using data parsed from Windows Event Logs. It remains in development as of now.&lt;/p&gt;
 &lt;p&gt;Find more details here -&amp;gt; &lt;a href=&#34;https://github.com/Tx0actical/Epsilon&#34;&gt;https://github.com/Tx0actical/Epsilon&lt;/a&gt;&lt;/p&gt;
 </content>
     </item>
