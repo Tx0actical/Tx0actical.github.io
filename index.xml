@@ -54,7 +54,8 @@ Hack-a-Sat(ellite) F-our (4)? Hack-a-Sat is an annual CTF competition that focus
       <content>&lt;p&gt;Hi.&lt;/p&gt;
 &lt;p&gt;Just taking a deviation from the KMDF drivers and sharing a writeup for the challenge &amp;ldquo;GGs&amp;rdquo; in Hack-a-Sat 4. GGs was a part of &amp;ldquo;Aerocapture the Flag&amp;rdquo;. There were a total of 4 challenges in this category, all of them focused on Orbital Mechanics problems.&lt;/p&gt;
 &lt;h3 id=&#34;hack-a-satellite-f-our-4&#34;&gt;Hack-a-Sat(ellite) F-our (4)?&lt;/h3&gt;
-&lt;p&gt;Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :). It found the challenges interesting but difficult at the same time. With NASA announcing the astronauts for Artemis II, space is in the news.&lt;/p&gt;
+&lt;p&gt;Hack-a-Sat is an annual CTF competition that focuses on Satellite Exploitation. The challenges range from mathematical problems in Astrodynamics, Orbtial Mechanics, and other categories such as pwn and rev but with a flavour of space :).&lt;/p&gt;
+&lt;p&gt;The challenges were interesting and difficult. With NASA announcing the astronauts for Artemis II, space is in the air!&lt;/p&gt;
 &lt;p&gt;This was the qualification round. The finals will be held at DEFCON 23.&lt;/p&gt;
 &lt;h3 id=&#34;the-challenge&#34;&gt;The Challenge&lt;/h3&gt;
 &lt;p&gt;The challenge involved maintaining direction of a radio antenna on a satellite, within 10° of NADIR.&lt;/p&gt;
