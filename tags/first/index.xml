@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>first on Tx0actical&#39;s Blog</title>
+    <link>https://Tx0actical.github.io/tags/first/</link>
+    <description>Recent content in first on Tx0actical&#39;s Blog</description>
+    <image>
+      <title>Tx0actical&#39;s Blog</title>
+      <url>https://Tx0actical.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://Tx0actical.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 22 Mar 2023 09:21:25 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/first/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://Tx0actical.github.io/about/</link>
+      <pubDate>Wed, 22 Mar 2023 09:21:25 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/about/</guid>
+      <description>whoami</description>
+    </item>
+    
+    <item>
+      <title>System Idle Process 0x00</title>
+      <link>https://Tx0actical.github.io/posts/first-post/</link>
+      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
+      
+      <guid>https://Tx0actical.github.io/posts/first-post/</guid>
+      <description>Desc Text.</description>
+    </item>
+    
+  </channel>
+</rss>
