@@ -18,7 +18,7 @@
       <pubDate>Tue, 11 Apr 2023 23:51:12 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/writeups/</guid>
-      <description>Desc Text.</description>
+      <description>CTF Writeups</description>
     </item>
     
     <item>
@@ -27,7 +27,7 @@
       <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/win-drivers/</guid>
-      <description>Desc Text.</description>
+      <description>A Blog Series Dedicated to Writing Windows KMDF Drivers and an Introduction to Writing Drivers for Offensive Engagements, called Writing Windows Drivers for Fun and Exploitation</description>
     </item>
     
     <item>
@@ -36,7 +36,7 @@
       <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/posts/hackasat4-gg/</guid>
-      <description>Desc Text.</description>
+      <description>Now I know, we don’t need an ADCS!</description>
     </item>
     
     <item>
@@ -54,7 +54,7 @@
       <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
-      <description>Desc Text.</description>
+      <description>Writing Windows KMDF Drivers for Fun and Exploitation - Part 2</description>
     </item>
     
     <item>
@@ -81,7 +81,7 @@
       <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
       
       <guid>https://Tx0actical.github.io/posts/first-post/</guid>
-      <description>Desc Text.</description>
+      <description>New Beginnings</description>
     </item>
     
   </channel>
