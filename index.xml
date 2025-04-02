@@ -2,78 +2,78 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tx0actical&#39;s Blog</title>
-    <link>http://localhost:1313/</link>
+    <link>https://Tx0actical.github.io/</link>
     <description>Recent content on Tx0actical&#39;s Blog</description>
     <image>
       <title>Tx0actical&#39;s Blog</title>
-      <url>http://localhost:1313/images/Avatar.png</url>
-      <link>http://localhost:1313/images/Avatar.png</link>
+      <url>https://Tx0actical.github.io/images/Avatar.png</url>
+      <link>https://Tx0actical.github.io/images/Avatar.png</link>
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
     <lastBuildDate>Mon, 24 Mar 2025 11:57:16 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://Tx0actical.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bypassing Domain-Wide Defender SmartScreen using DNS Sinkholing</title>
-      <link>http://localhost:1313/posts/ss-bypass/</link>
+      <link>https://Tx0actical.github.io/posts/ss-bypass/</link>
       <pubDate>Mon, 24 Mar 2025 11:57:16 +0530</pubDate>
-      <guid>http://localhost:1313/posts/ss-bypass/</guid>
+      <guid>https://Tx0actical.github.io/posts/ss-bypass/</guid>
       <description>It&amp;#39;s always DNS</description>
     </item>
     <item>
       <title>Writeups</title>
-      <link>http://localhost:1313/writeups/</link>
+      <link>https://Tx0actical.github.io/writeups/</link>
       <pubDate>Tue, 11 Apr 2023 23:51:12 +0530</pubDate>
-      <guid>http://localhost:1313/writeups/</guid>
+      <guid>https://Tx0actical.github.io/writeups/</guid>
       <description>CTF Writeups</description>
     </item>
     <item>
       <title>Windows Drivers</title>
-      <link>http://localhost:1313/win-drivers/</link>
+      <link>https://Tx0actical.github.io/win-drivers/</link>
       <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
-      <guid>http://localhost:1313/win-drivers/</guid>
+      <guid>https://Tx0actical.github.io/win-drivers/</guid>
       <description>A Blog Series Dedicated to Writing Windows KMDF Drivers and an Introduction to Writing Drivers for Offensive Engagements, called Writing Windows Drivers for Fun and Exploitation</description>
     </item>
     <item>
       <title>GGs - Farewell to ADCS</title>
-      <link>http://localhost:1313/posts/hackasat4-gg/</link>
+      <link>https://Tx0actical.github.io/posts/hackasat4-gg/</link>
       <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
-      <guid>http://localhost:1313/posts/hackasat4-gg/</guid>
+      <guid>https://Tx0actical.github.io/posts/hackasat4-gg/</guid>
       <description>Now I know, we don’t need an ADCS!</description>
     </item>
     <item>
       <title>Projects</title>
-      <link>http://localhost:1313/projects/</link>
+      <link>https://Tx0actical.github.io/projects/</link>
       <pubDate>Thu, 30 Mar 2023 02:04:20 +0530</pubDate>
-      <guid>http://localhost:1313/projects/</guid>
+      <guid>https://Tx0actical.github.io/projects/</guid>
       <description>Projects!</description>
     </item>
     <item>
       <title>0x02 Advanced Windows Internals</title>
-      <link>http://localhost:1313/posts/win-drivers/win-drivers-p2/</link>
+      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</link>
       <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
-      <guid>http://localhost:1313/posts/win-drivers/win-drivers-p2/</guid>
+      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p2/</guid>
       <description>Writing Windows KMDF Drivers for Fun and Exploitation - Part 2</description>
     </item>
     <item>
       <title>About</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://Tx0actical.github.io/about/</link>
       <pubDate>Wed, 22 Mar 2023 09:21:25 +0530</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://Tx0actical.github.io/about/</guid>
       <description>$ whoami</description>
     </item>
     <item>
       <title>0x01 Introduction and Fundamentals</title>
-      <link>http://localhost:1313/posts/win-drivers/win-drivers-p1/</link>
+      <link>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</link>
       <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
-      <guid>http://localhost:1313/posts/win-drivers/win-drivers-p1/</guid>
+      <guid>https://Tx0actical.github.io/posts/win-drivers/win-drivers-p1/</guid>
       <description>Writing Windows KMDF Drivers for Fun and Exploitation - Part 1</description>
     </item>
     <item>
       <title>System Idle Process 0</title>
-      <link>http://localhost:1313/posts/first-post/</link>
+      <link>https://Tx0actical.github.io/posts/first-post/</link>
       <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
-      <guid>http://localhost:1313/posts/first-post/</guid>
+      <guid>https://Tx0actical.github.io/posts/first-post/</guid>
       <description>New Beginnings</description>
     </item>
   </channel>
