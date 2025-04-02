@@ -1,91 +1,59 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Tx0actical&#39;s Blog</title>
     <link>https://Tx0actical.github.io/tags/</link>
     <description>Recent content in Tags on Tx0actical&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <image>
+      <title>Tx0actical&#39;s Blog</title>
+      <url>https://Tx0actical.github.io/images/Avatar.png</url>
+      <link>https://Tx0actical.github.io/images/Avatar.png</link>
+    </image>
+    <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 06 Apr 2023 01:13:29 +0530</lastBuildDate><atom:link href="https://Tx0actical.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 Apr 2023 23:51:12 +0530</lastBuildDate>
+    <atom:link href="https://Tx0actical.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Astrodynamics</title>
-      <link>https://Tx0actical.github.io/tags/astrodynamics/</link>
-      <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/astrodynamics/</guid>
+      <title>Writeup</title>
+      <link>https://Tx0actical.github.io/tags/writeup/</link>
+      <pubDate>Tue, 11 Apr 2023 23:51:12 +0530</pubDate>
+      <guid>https://Tx0actical.github.io/tags/writeup/</guid>
       <description></description>
-      <content></content>
     </item>
-    
-    <item>
-      <title>Space</title>
-      <link>https://Tx0actical.github.io/tags/space/</link>
-      <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/space/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Advanced</title>
-      <link>https://Tx0actical.github.io/tags/advanced/</link>
-      <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/advanced/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Internals</title>
-      <link>https://Tx0actical.github.io/tags/internals/</link>
-      <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/internals/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Windows</title>
-      <link>https://Tx0actical.github.io/tags/windows/</link>
-      <pubDate>Fri, 24 Mar 2023 12:53:24 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/windows/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
     <item>
       <title>Drivers</title>
       <link>https://Tx0actical.github.io/tags/drivers/</link>
-      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
-      
+      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
       <guid>https://Tx0actical.github.io/tags/drivers/</guid>
       <description></description>
-      <content></content>
     </item>
-    
     <item>
-      <title>Introduction</title>
-      <link>https://Tx0actical.github.io/tags/introduction/</link>
-      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/introduction/</guid>
+      <title>Windows</title>
+      <link>https://Tx0actical.github.io/tags/windows/</link>
+      <pubDate>Thu, 06 Apr 2023 10:30:57 +0530</pubDate>
+      <guid>https://Tx0actical.github.io/tags/windows/</guid>
       <description></description>
-      <content></content>
     </item>
-    
     <item>
-      <title>Welcome</title>
-      <link>https://Tx0actical.github.io/tags/welcome/</link>
-      <pubDate>Sun, 26 Feb 2023 18:48:34 +0530</pubDate>
-      
-      <guid>https://Tx0actical.github.io/tags/welcome/</guid>
+      <title>Writeups</title>
+      <link>https://Tx0actical.github.io/tags/writeups/</link>
+      <pubDate>Thu, 06 Apr 2023 01:13:29 +0530</pubDate>
+      <guid>https://Tx0actical.github.io/tags/writeups/</guid>
       <description></description>
-      <content></content>
     </item>
-    
+    <item>
+      <title>Projects</title>
+      <link>https://Tx0actical.github.io/tags/projects/</link>
+      <pubDate>Thu, 30 Mar 2023 02:04:20 +0530</pubDate>
+      <guid>https://Tx0actical.github.io/tags/projects/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>First</title>
+      <link>https://Tx0actical.github.io/tags/first/</link>
+      <pubDate>Wed, 22 Mar 2023 09:21:25 +0530</pubDate>
+      <guid>https://Tx0actical.github.io/tags/first/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
