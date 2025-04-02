@@ -11,12 +11,12 @@
     </image>
     <generator>Hugo -- 0.145.0</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 24 Mar 2025 11:57:16 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 02 Apr 2025 11:57:16 +0530</lastBuildDate>
     <atom:link href="https://Tx0actical.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Bypassing Domain-Wide Defender SmartScreen using DNS Sinkholing</title>
+      <title>Bypassing SmartScreen Domain-Wide using DNS Sinkholing</title>
       <link>https://Tx0actical.github.io/posts/ss-bypass/</link>
-      <pubDate>Mon, 24 Mar 2025 11:57:16 +0530</pubDate>
+      <pubDate>Wed, 02 Apr 2025 11:57:16 +0530</pubDate>
       <guid>https://Tx0actical.github.io/posts/ss-bypass/</guid>
       <description>It&amp;#39;s always DNS</description>
     </item>
